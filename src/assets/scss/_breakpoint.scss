@@ -1,0 +1,13 @@
+//375px(手機)
+//768px(tablet)
+//992px(設計稿)
+@mixin tablet {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+@mixin desktop {
+  @media (min-width: 992px) {
+    @content;
+  }
+}
