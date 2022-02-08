@@ -4,7 +4,7 @@ module.exports = {
       scss: {
         prependData: `
           @use "@/assets/scss/_color.scss";
-          @use "@/assets/scss/_breakpoint.scss"
+          @use "@/assets/scss/_breakpoint.scss";
         `,
       },
     },
