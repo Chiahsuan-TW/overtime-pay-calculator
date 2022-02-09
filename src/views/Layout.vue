@@ -8,7 +8,6 @@
 <style scoped lang="scss">
 .content {
   background: pink;
-  padding: 100px;
 }
 p {
   margin-bottom: 50px;

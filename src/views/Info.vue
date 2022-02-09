@@ -1,51 +1,63 @@
 <template>
   <div class="modal">
     <div class="modal-content">
-      <div class="dropdown">
-        <DropdownTitle
-          @clickDropdown="toggleDropdown"
-          :selectedWrokType="selectedWrokType"
-          >工作類型</DropdownTitle
-        >
-        <ul :class="['dropdown-menu', { unfolded: unfolded }]">
-          <DropdownList
-            v-for="(option, index) in workTypeList"
-            :key="index"
-            :option="option"
-            @clickOption="selectWorkType"
-          ></DropdownList>
-        </ul>
+      <div class="modal-content-item">
+        <Dropdown :optionList="workTypeList">工作類型</Dropdown>
+      </div>
+
+      <div class="modal-content-item">
+        <Dropdown :optionList="workPatternList">工作型態</Dropdown>
+      </div>
+
+      <div class="modal-content-item">
+        <div class="dropdown-title">
+          <div class="img-frame">
+            <img src="../assets/images/star.png" alt="star icon" />
+          </div>
+          <input
+            id="salary"
+            type="text"
+            :placeholder="`薪資: ${minimumWage}`"
+          />
+          <label for="salary" class="pen" @click="toggleDropdown">
+            <img src="../assets/images/pen.png" alt="pen" />
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-content-item">
+        <div class="dropdown-title">
+          <div class="img-frame">
+            <img src="../assets/images/calendar.png" alt="calendar icon" />
+          </div>
+          <p>工作起始日</p>
+
+          <!-- <label for="date" class="pen" @click="toggleDropdown">
+            <img src="../assets/images/pen.png" alt="pen" />
+          </label> -->
+        </div>
+        <!-- <input id="date" type="text" /> -->
       </div>
     </div>
   </div>
-  <!-- <router-link :to="{ name: 'MonthlyRecord' }">下一步</router-link> -->
 </template>
 
 <script>
-import DropdownTitle from "../components/DropdownTitle.vue";
-import DropdownList from "../components/DropdownList.vue";
+import Dropdown from "../components/Dropdown.vue";
 export default {
   name: "Info",
   components: {
-    DropdownTitle,
-    DropdownList,
+    Dropdown,
   },
   data() {
     return {
       workTypeList: ["廠工", "建築工", "看護", "漁工"],
-      selectedWrokType: "",
-      unfolded: false,
+      workPatternList: ["週休二日", "非週休二日"],
+      minimumWage: "25250",
+      wage: "",
     };
   },
-  methods: {
-    toggleDropdown() {
-      this.unfolded = !this.unfolded;
-    },
-    selectWorkType(workType) {
-      this.selectedWrokType = workType;
-      this.toggleDropdown();
-    },
-  },
+  methods: {},
 };
 </script>
 
@@ -53,6 +65,10 @@ export default {
 .modal {
   max-width: 1000px;
   background-color: #fff;
+  box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);
+  border-radius: 16px;
+  margin: 0 auto;
+  padding: 40px;
 
   &-content {
     max-width: 330px;
@@ -60,27 +76,56 @@ export default {
   }
 }
 
-.dropdown {
+.modal-content-item {
   position: relative;
+  border-bottom: 1px solid color.$gray;
+
+  & + .modal-content-item {
+    margin-top: 30px;
+  }
 }
 
-.dropdown-menu {
-  width: 100%;
-  margin: 13px 0 0;
-  padding: 0;
-  opacity: 0;
-  max-height: 0;
-  transition: 500ms opacity ease-in-out, 1.5s max-height;
-  pointer-events: none;
-  position: absolute;
-  top: 100%;
-  z-index: 99;
-}
+.dropdown-title {
+  display: flex;
+  align-items: center;
+  padding: 8px 8px 8px 0;
 
-.dropdown-menu.unfolded {
-  width: 100%;
-  opacity: 1;
-  max-height: fit-content;
-  pointer-events: auto;
+  .img-frame {
+    width: 24px;
+    height: 24px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  input {
+    border: 0;
+    margin-left: 16px;
+    font-weight: normal;
+    font-size: 20px;
+  }
+
+  input:focus {
+    outline: none;
+  }
+  ::placeholder {
+    font-weight: normal;
+    font-size: 20px;
+  }
+  .pen {
+    margin-left: auto;
+    width: 19px;
+    height: 19px;
+    background-color: #fff;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 }
 </style>
