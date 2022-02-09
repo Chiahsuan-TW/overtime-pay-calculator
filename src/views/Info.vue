@@ -31,12 +31,8 @@
             <img src="../assets/images/calendar.png" alt="calendar icon" />
           </div>
           <p>工作起始日</p>
-
-          <!-- <label for="date" class="pen" @click="toggleDropdown">
-            <img src="../assets/images/pen.png" alt="pen" />
-          </label> -->
         </div>
-        <!-- <input id="date" type="text" /> -->
+        <input id="date" type="date" />
       </div>
     </div>
   </div>
@@ -90,6 +86,15 @@ export default {
   align-items: center;
   padding: 8px 8px 8px 0;
 
+  & + input {
+    border: 0;
+    display: block;
+  }
+
+  & + input:focus {
+    outline: none;
+  }
+
   .img-frame {
     width: 24px;
     height: 24px;
@@ -97,7 +102,7 @@ export default {
     img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
     }
   }
 
@@ -126,6 +131,12 @@ export default {
       height: 100%;
       object-fit: cover;
     }
+  }
+
+  p {
+    margin-left: 16px;
+    font-weight: bold;
+    font-size: 20px;
   }
 }
 </style>
