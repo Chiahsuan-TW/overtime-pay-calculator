@@ -2,22 +2,18 @@
   <div class="modal">
     <div class="modal-content">
       <div class="dropdown">
-        <div class="dropdown-title">
-          <div class="img-frame">
-            <img src="../assets/images/star.png" alt="star icon" />
-          </div>
-          <p v-if="selectedWrokType">{{ selectedWrokType }}</p>
-          <p v-else>工作類型</p>
-          <button class="triangle" @click="toggleDropdown"></button>
-        </div>
+        <DropdownTitle
+          @clickDropdown="toggleDropdown"
+          :selectedWrokType="selectedWrokType"
+          >工作類型</DropdownTitle
+        >
         <ul :class="['dropdown-menu', { unfolded: unfolded }]">
-          <li
-            v-for="(workType, index) in workTypeList"
+          <DropdownList
+            v-for="(option, index) in workTypeList"
             :key="index"
-            @click="selectWorkType(workType)"
-          >
-            {{ workType }}
-          </li>
+            :option="option"
+            @clickOption="selectWorkType"
+          ></DropdownList>
         </ul>
       </div>
     </div>
@@ -26,8 +22,14 @@
 </template>
 
 <script>
+import DropdownTitle from "../components/DropdownTitle.vue";
+import DropdownList from "../components/DropdownList.vue";
 export default {
   name: "Info",
+  components: {
+    DropdownTitle,
+    DropdownList,
+  },
   data() {
     return {
       workTypeList: ["廠工", "建築工", "看護", "漁工"],
@@ -60,40 +62,11 @@ export default {
 
 .dropdown {
   position: relative;
-
-  &-title {
-    display: flex;
-    align-items: center;
-    padding: 8px 8px 8px 0;
-    border-bottom: 1px solid color.$gray;
-  }
-
-  .img-frame {
-    width: 24px;
-    height: 24px;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  p {
-    margin-left: 20px;
-  }
-  .triangle {
-    width: 0;
-    height: 0;
-    border: 8px solid;
-    margin-left: auto;
-    margin-top: 10px;
-    border-color: color.$black #fff #fff #fff;
-  }
 }
 
 .dropdown-menu {
   width: 100%;
+  margin: 13px 0 0;
   padding: 0;
   opacity: 0;
   max-height: 0;
@@ -102,13 +75,6 @@ export default {
   position: absolute;
   top: 100%;
   z-index: 99;
-
-  li {
-    padding: 12px 0;
-    width: 100%;
-    border: 1px solid color.$gray;
-    background-color: #fff;
-  }
 }
 
 .dropdown-menu.unfolded {
