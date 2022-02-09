@@ -1,5 +1,7 @@
 <template>
   <div class="modal">
+    <Stepper :currentStep="currentStep" />
+
     <div class="modal-content">
       <div class="modal-content-item">
         <Dropdown :optionList="workTypeList">工作類型</Dropdown>
@@ -40,10 +42,13 @@
 
 <script>
 import Dropdown from "../components/Dropdown.vue";
+import Stepper from "../components/Stepper.vue";
+
 export default {
   name: "Info",
   components: {
     Dropdown,
+    Stepper,
   },
   data() {
     return {
@@ -51,6 +56,7 @@ export default {
       workPatternList: ["週休二日", "非週休二日"],
       minimumWage: "25250",
       wage: "",
+      currentStep: 1,
     };
   },
   methods: {},
@@ -64,11 +70,11 @@ export default {
   box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);
   border-radius: 16px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 40px 0;
 
   &-content {
     max-width: 330px;
-    margin: 0 auto;
+    margin: 60px auto 0;
   }
 }
 
