@@ -32,7 +32,7 @@ const routes = [
   {
     path: "/AnnualRecord",
     name: "AnnualRecord",
-    component: import("@/views/AnnualRecord.vue"),
+    component: () => import("@/views/AnnualRecord.vue"),
   },
 ];
 
