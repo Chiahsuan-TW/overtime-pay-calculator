@@ -1,6 +1,6 @@
 <template>
   <div class="stepper">
-    <div class="step active">1</div>
+    <div :class="['step', { active: currentStep >= 1 }]">1</div>
     <div :class="['step', { active: currentStep >= 2 }]">2</div>
     <div :class="['step', { active: currentStep === 3 }]">3</div>
   </div>
@@ -40,8 +40,12 @@ export default {
     z-index: 6;
 
     & + div {
-      margin-left: 130px;
+      margin-left: 120px;
       background-color: #fff;
+
+      @include breakpoint.tablet {
+        margin-left: 138px;
+      }
     }
   }
 

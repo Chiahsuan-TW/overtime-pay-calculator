@@ -78,6 +78,10 @@ export default {
     margin-top: 10px;
     border-color: color.$black #fff #fff #fff;
   }
+
+  .triangle:hover {
+    cursor: pointer;
+  }
 }
 
 .dropdown-menu {
