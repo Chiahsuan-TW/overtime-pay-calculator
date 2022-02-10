@@ -67,8 +67,7 @@ export default {
 
   p {
     margin-left: 16px;
-    font-weight: bold;
-    font-size: 20px;
+    @extend %content-large-bold;
   }
   .triangle {
     width: 0;
@@ -102,8 +101,7 @@ export default {
     border: 1px solid color.$gray;
     background-color: #fff;
     color: color.$gray;
-    font-weight: 500;
-    font-size: 20px;
+    @extend %content-large-bold;
   }
 
   li:not(:first-child) {

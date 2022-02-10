@@ -72,8 +72,7 @@ export default {
 
 <style scoped lang="scss">
 h3 {
-  font-weight: bold;
-  font-size: 36px;
+  @extend %page-title;
   width: fit-content;
   margin: 0 auto;
 }
@@ -128,16 +127,14 @@ h3 {
   input {
     border: 0;
     margin-left: 16px;
-    font-weight: normal;
-    font-size: 20px;
+    @extend %content-large;
   }
 
   input:focus {
     outline: none;
   }
   ::placeholder {
-    font-weight: normal;
-    font-size: 20px;
+    @extend %content-large;
   }
   .pen {
     margin-left: auto;
@@ -154,8 +151,7 @@ h3 {
 
   p {
     margin-left: 16px;
-    font-weight: bold;
-    font-size: 20px;
+    @extend %content-large-bold;
   }
 }
 

@@ -19,8 +19,7 @@ button {
   color: #fff;
   border-radius: 4px;
   margin-top: 52px;
-  font-weight: 800;
-  font-size: 20px;
+  @extend %content-large-bold;
 }
 
 button:hover {
