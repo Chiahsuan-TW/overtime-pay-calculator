@@ -104,7 +104,7 @@ img {
     margin-bottom: 60px;
     font-size: 24px;
     @include breakpoint.desktop {
-      font-size: 32pxpx;
+      font-size: 32px;
     }
   }
 }
