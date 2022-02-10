@@ -1,0 +1,72 @@
+@use "./breakpoint.scss";
+
+%home-title {
+  font-size: 30px;
+  font-weight: bold;
+
+  @include breakpoint.tablet {
+    font-size: 45px;
+  }
+
+  @include breakpoint.desktop {
+    font-size: 54px;
+  }
+}
+
+%home-subtitle {
+  font-size: 24px;
+  font-weight: bold;
+
+  @include breakpoint.desktop {
+    font-size: 32px;
+  }
+}
+
+%page-title {
+  font-size: 28px;
+  font-weight: bold;
+
+  @include breakpoint.tablet {
+    font-size: 36px;
+  }
+}
+
+%content-large {
+  font-size: 18px;
+
+  @include breakpoint.tablet {
+    font-size: 20px;
+  }
+}
+
+%content-large-bold {
+  font-size: 18px;
+  font-weight: bold;
+
+  @include breakpoint.tablet {
+    font-size: 20px;
+  }
+}
+
+%content-small {
+  font-size: 16px;
+
+  @include breakpoint.tablet {
+    font-size: 18px;
+  }
+}
+
+%content-small-bold {
+  font-size: 16px;
+  font-weight: bold;
+
+  @include breakpoint.tablet {
+    font-size: 18px;
+  }
+}
+
+%content-title {
+  font-size: 24px;
+  font-weight: bold;
+
+}
