@@ -39,13 +39,13 @@
 }
 h1 {
   margin-bottom: 60px;
-  font-size: 30px;
-  @include breakpoint.tablet {
-    font-size: 45px;
-  }
-  @include breakpoint.desktop {
-    font-size: 60px;
-  }
+  @extend %home-title;
+  // @include breakpoint.tablet {
+  //   font-size: 45px;
+  // }
+  // @include breakpoint.desktop {
+  //   font-size: 60px;
+  // }
 }
 
 main {
@@ -89,6 +89,7 @@ a {
   @include breakpoint.tablet {
     width: 331px;
   }
+  @extend %content-title;
 }
 img {
   width: 100%;
@@ -102,10 +103,11 @@ img {
     color: color.$gray;
     font-weight: 900;
     margin-bottom: 60px;
-    font-size: 24px;
-    @include breakpoint.desktop {
-      font-size: 32px;
-    }
+    @extend %home-subtitle;
+    // font-size: 24px;
+    // @include breakpoint.desktop {
+    //   font-size: 32px;
+    // }
   }
 }
 .logo {
