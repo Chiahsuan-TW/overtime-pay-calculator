@@ -1,4 +1,5 @@
 <template>
+  <h3>基本資料</h3>
   <div class="modal">
     <Stepper :currentStep="currentStep" />
 
@@ -36,6 +37,10 @@
         </div>
         <input id="date" type="date" />
       </div>
+
+      <router-link :to="{ name: 'MonthlyRecord' }">
+        <ProcedureButton>下一步</ProcedureButton>
+      </router-link>
     </div>
   </div>
 </template>
@@ -43,12 +48,14 @@
 <script>
 import Dropdown from "../components/Dropdown.vue";
 import Stepper from "../components/Stepper.vue";
+import ProcedureButton from "../components/ProcedureButton.vue";
 
 export default {
   name: "Info",
   components: {
     Dropdown,
     Stepper,
+    ProcedureButton,
   },
   data() {
     return {
@@ -64,12 +71,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+h3 {
+  font-weight: bold;
+  font-size: 36px;
+  width: fit-content;
+  margin: 0 auto;
+}
 .modal {
   max-width: 1000px;
   background-color: #fff;
   box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);
   border-radius: 16px;
-  margin: 0 auto;
+  margin: 40px auto 0;
   padding: 40px 0;
 
   &-content {
@@ -144,5 +157,9 @@ export default {
     font-weight: bold;
     font-size: 20px;
   }
+}
+
+a {
+  display: inline-block;
 }
 </style>
