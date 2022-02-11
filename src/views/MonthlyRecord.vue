@@ -7,6 +7,5 @@
 <style scoped lang="scss">
 .content {
   padding: 100px;
-  background: bisque;
 }
 </style>
