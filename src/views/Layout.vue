@@ -5,12 +5,19 @@
 </template>
 <script></script>
 <style scoped lang="scss">
-.content {
-  height: 120vh;
-  background: no-repeat url("../assets/images/background.png");
-  background-position: bottom;
-}
 p {
   margin-bottom: 50px;
+}
+.content {
+  height: 130vh;
+  padding-top: 62px;
+  background: no-repeat url("../assets/images/background.png");
+  background-position: bottom left;
+}
+@media (min-width: 768px) {
+  .content {
+    height: 100vh;
+    background-position: bottom;
+  }
 }
 </style>
