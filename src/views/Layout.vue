@@ -5,8 +5,12 @@
 </template>
 <script></script>
 <style scoped lang="scss">
+p {
+  margin-bottom: 50px;
+}
 .content {
   height: 130vh;
+  padding-top: 62px;
   background: no-repeat url("../assets/images/background.png");
   background-position: bottom;
 }
@@ -14,8 +18,5 @@
   .content {
     height: 100vh;
   }
-}
-p {
-  margin-bottom: 50px;
 }
 </style>
