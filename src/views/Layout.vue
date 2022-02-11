@@ -12,11 +12,12 @@ p {
   height: 130vh;
   padding-top: 62px;
   background: no-repeat url("../assets/images/background.png");
-  background-position: bottom;
+  background-position: bottom left;
 }
 @media (min-width: 768px) {
   .content {
     height: 100vh;
+    background-position: bottom;
   }
 }
 </style>
