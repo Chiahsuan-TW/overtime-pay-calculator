@@ -19,7 +19,7 @@
           </div>
           <input
             id="salary"
-            type="text"
+            type="number"
             :placeholder="`薪資: ${minimumWage}`"
           />
           <label for="salary" class="pen" @click="toggleDropdown">
@@ -83,6 +83,10 @@ h3 {
   border-radius: 16px;
   margin: 40px auto 0;
   padding: 40px 0;
+
+  @include breakpoint.tablet {
+    width: 80%;
+  }
 
   &-content {
     max-width: 330px;
@@ -156,6 +160,8 @@ h3 {
 }
 
 a {
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  margin: 52px auto 0;
 }
 </style>
