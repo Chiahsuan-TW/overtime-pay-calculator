@@ -27,12 +27,12 @@ const routes = [
         name: "MonthlyRecord",
         component: () => import("@/views/MonthlyRecord.vue"),
       },
+      {
+        path: "/AnnualRecord",
+        name: "AnnualRecord",
+        component: () => import("@/views/AnnualRecord.vue"),
+      },
     ],
-  },
-  {
-    path: "/AnnualRecord",
-    name: "AnnualRecord",
-    component: () => import("@/views/AnnualRecord.vue"),
   },
 ];
 
