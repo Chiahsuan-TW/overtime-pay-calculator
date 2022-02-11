@@ -1,84 +1,20 @@
 <template>
-  <h3>每月出勤明細</h3>
+  <h3>2021每月出勤明細</h3>
   <div class="modal">
     <Stepper :currentStep="currentStep" />
 
     <div class="modal-content">
-      <div class="modal-content-item">
-        <h4>1月</h4>
-        <div class="monthly-details">
-          <p class="working-hours">
-            <span>當月出勤時數</span>
-            <span>20小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當月加班時數</span>
-            <span>2小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當月加班費</span>
-            <span>2000 NTD</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="modal-content-item">
-        <h4>2月</h4>
-        <div class="monthly-details">
-          <p class="working-hours">
-            <span>當月出勤時數</span>
-            <span>20小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當月加班時數</span>
-            <span>2小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當月加班費</span>
-            <span>2000 NTD</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="modal-content-item">
-        <h4>3月</h4>
-        <div class="monthly-details">
-          <p class="working-hours">
-            <span>當月出勤時數</span>
-            <span>20小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當月加班時數</span>
-            <span>2小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當月加班費</span>
-            <span>2000 NTD</span>
-          </p>
-        </div>
-      </div>
+      <MonthlyList
+        v-for="(record, index) in monthlyRecords"
+        :key="index"
+        v-bind="record"
+      />
     </div>
 
     <div class="divider"></div>
 
     <div class="result">
-      <div class="modal-content-item">
-        <h4>年度統計</h4>
-        <div class="monthly-details">
-          <p class="working-hours">
-            <span>當年度出勤時數</span>
-            <span>60小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當年度加班時數</span>
-            <span>6小時</span>
-          </p>
-          <p class="overtime-hours">
-            <span>當年度加班費</span>
-            <span>6000 NTD</span>
-          </p>
-        </div>
-      </div>
+      <AnnualList />
     </div>
 
     <ProcedureButton class="complete-button">完成</ProcedureButton>
@@ -87,16 +23,25 @@
 <script>
 import Stepper from "@/components/Stepper.vue";
 import ProcedureButton from "@/components/ProcedureButton.vue";
+import MonthlyList from "../components/MonthlyList.vue";
+import AnnualList from "../components/AnnualList.vue";
 
 export default {
   name: "AnnualRecord",
   components: {
     Stepper,
     ProcedureButton,
+    MonthlyList,
+    AnnualList,
   },
   data() {
     return {
       currentStep: 3,
+      monthlyRecords: [
+        { month: "1月", workingHours: 20, overtimeHours: 2, overtimePay: 2000 },
+        { month: "2月", workingHours: 20, overtimeHours: 2, overtimePay: 2000 },
+        { month: "3月", workingHours: 20, overtimeHours: 2, overtimePay: 2000 },
+      ],
     };
   },
 };
@@ -127,58 +72,6 @@ h3 {
     @include breakpoint.tablet {
       padding: 68px;
     }
-  }
-
-  &-content-item {
-    background-color: color.$pale-yellow;
-    padding: 20px;
-
-    @include breakpoint.desktop {
-      padding: 42px 62px;
-    }
-
-    h4 {
-      @extend %content-title;
-
-      @include breakpoint.desktop {
-        text-align: left;
-      }
-    }
-
-    .monthly-details {
-      margin-top: 27px;
-
-      @include breakpoint.desktop {
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-
-    p {
-      // min-width: 100%;
-      width: 220px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid color.$gray;
-
-      @include breakpoint.desktop {
-        margin: 0;
-      }
-    }
-
-    span:first-child {
-      @extend %content-large;
-    }
-
-    span:last-child {
-      @extend %content-large-bold;
-      // margin-left: 56px;
-    }
-  }
-
-  &-content-item + &-content-item {
-    margin-top: 40px;
   }
 }
 
