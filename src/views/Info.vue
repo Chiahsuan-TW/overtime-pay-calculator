@@ -35,7 +35,20 @@
           </div>
           <p>工作起始日</p>
         </div>
-        <input id="date" type="date" />
+        <a-date-picker
+          :allowClear="false"
+          v-model:value="firstDayOfWork"
+          dropdownClassName="custom-calendar"
+          class="custom-datepicker"
+          :placeholder="today"
+        >
+          <!-- <template #renderExtraFooter>
+            <div class="custom-footer">
+              <button>取消</button>
+              <button>確認</button>
+            </div>
+          </template> -->
+        </a-date-picker>
       </div>
 
       <router-link :to="{ name: 'MonthlyRecord' }">
@@ -49,6 +62,7 @@
 import Dropdown from "../components/Dropdown.vue";
 import Stepper from "../components/Stepper.vue";
 import ProcedureButton from "../components/ProcedureButton.vue";
+import { Moment } from "moment";
 
 export default {
   name: "Info",
@@ -64,9 +78,17 @@ export default {
       minimumWage: "25250",
       wage: "",
       currentStep: 1,
+      firstDayOfWork: Moment,
     };
   },
   methods: {},
+  computed: {
+    today() {
+      let today = new Date().toISOString();
+      today = today.split("T")[0];
+      return today;
+    },
+  },
 };
 </script>
 
