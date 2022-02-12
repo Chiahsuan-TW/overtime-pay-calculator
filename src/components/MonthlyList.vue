@@ -72,6 +72,7 @@ export default {
     p {
       width: 220px;
       margin: 0 auto;
+      padding: 8px 0;
       display: flex;
       justify-content: space-between;
       border-bottom: 1px solid color.$gray;
