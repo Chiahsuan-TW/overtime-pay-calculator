@@ -19,7 +19,7 @@
           </div>
           <input
             id="salary"
-            type="text"
+            type="number"
             :placeholder="`薪資: ${minimumWage}`"
           />
           <label for="salary" class="pen" @click="toggleDropdown">
@@ -35,7 +35,20 @@
           </div>
           <p>工作起始日</p>
         </div>
-        <input id="date" type="date" />
+        <a-date-picker
+          :allowClear="false"
+          v-model:value="firstDayOfWork"
+          dropdownClassName="custom-calendar"
+          class="custom-datepicker"
+          :placeholder="today"
+        >
+          <!-- <template #renderExtraFooter>
+            <div class="custom-footer">
+              <button>取消</button>
+              <button>確認</button>
+            </div>
+          </template> -->
+        </a-date-picker>
       </div>
 
       <router-link :to="{ name: 'MonthlyRecord' }">
@@ -49,6 +62,7 @@
 import Dropdown from "../components/Dropdown.vue";
 import Stepper from "../components/Stepper.vue";
 import ProcedureButton from "../components/ProcedureButton.vue";
+import { Moment } from "moment";
 
 export default {
   name: "Info",
@@ -64,9 +78,17 @@ export default {
       minimumWage: "25250",
       wage: "",
       currentStep: 1,
+      firstDayOfWork: Moment,
     };
   },
   methods: {},
+  computed: {
+    today() {
+      let today = new Date().toISOString();
+      today = today.split("T")[0];
+      return today;
+    },
+  },
 };
 </script>
 
@@ -83,6 +105,10 @@ h3 {
   border-radius: 16px;
   margin: 40px auto 0;
   padding: 40px 0;
+
+  @include breakpoint.tablet {
+    width: 80%;
+  }
 
   &-content {
     max-width: 330px;
@@ -156,6 +182,8 @@ h3 {
 }
 
 a {
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  margin: 52px auto 0;
 }
 </style>

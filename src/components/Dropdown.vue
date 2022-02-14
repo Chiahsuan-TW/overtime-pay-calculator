@@ -101,6 +101,8 @@ export default {
     border: 1px solid color.$gray;
     background-color: #fff;
     color: color.$gray;
+    text-align: center;
+
     @extend %content-large-bold;
   }
 

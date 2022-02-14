@@ -18,7 +18,6 @@ button {
   background-color: color.$primary-light;
   color: #fff;
   border-radius: 4px;
-  margin-top: 52px;
   @extend %content-large-bold;
 }
 

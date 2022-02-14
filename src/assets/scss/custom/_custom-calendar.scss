@@ -1,0 +1,84 @@
+.custom-datepicker {
+  width: 100%;
+  .ant-input {
+    border: 0;
+  }
+
+  .ant-input:focus {
+    box-shadow: none;
+  }
+
+  .anticon {
+    width: 0;
+    height: 0;
+    border: 8px solid;
+    margin-left: auto;
+    border-color: color.$black #fff #fff #fff;
+    cursor: pointer;
+
+    svg {
+      display: none;
+    }
+  }
+}
+
+.custom-footer {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+
+  button {
+    background-color: #fff;
+  }
+
+  button:last-child {
+    color: color.$primary-dark;
+  }
+}
+
+
+.custom-calendar {
+  .ant-calendar-header {
+    a {
+      color: color.$primary-dark;
+    }
+
+    a::before, a::after {
+      border-color :color.$primary-dark;
+      border-width: 3.5px 0 0 3.5px;
+    }
+
+    a::before:hover, a::after:hover {
+      border-color :color.$brown;
+    }
+  }
+
+  .ant-calendar-column-header-inner {
+    color: color.$primary-dark;
+  }
+
+  .ant-calendar-selected-day .ant-calendar-date {
+    background-color: color.$primary-dark;
+  }
+
+  .ant-calendar-date {
+    border: 0;
+    border-radius: 50%;
+    font-weight: normal;
+  }
+
+  .ant-calendar-today {
+    .ant-calendar-date {
+      color: #000;
+    }
+  }
+
+  .ant-calendar-date[aria-selected="true"] {
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .ant-calendar-today-btn {
+    display: none;
+  }
+}
