@@ -104,19 +104,4 @@ h3 {
     background-color: color.$brown;
   }
 }
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 0px;
-}
-
-::-webkit-scrollbar-track {
-  background: #fff;
-}
-
-::-webkit-scrollbar-thumb {
-  background: color.$primary;
-  border-radius: 5px;
-  height: 10px;
-}
 </style>
