@@ -90,7 +90,6 @@ export default {
       this.selectedDate = newSelectedDate;
     },
     getWeekday(date) {
-      console.log("getWeekday", dayjs(date).weekday());
       return dayjs(date).weekday();
     },
   },
@@ -123,6 +122,11 @@ export default {
             "YYYY-MM-DD"
           ),
           isCurrentMonth: true,
+          weekday: this.getWeekday(
+            dayjs(`${this.year}-${this.month}-${index + 1}`).format(
+              "YYYY-MM-DD"
+            )
+          ),
         };
       });
     },

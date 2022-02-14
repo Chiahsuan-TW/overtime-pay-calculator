@@ -10,8 +10,10 @@
     <span>{{ label }}</span>
     <!-- <p class="overtime-indicator">加班2hr</p> -->
   </td>
-
-  <CalendarModal v-if="isModalOpen" @close="toggleModal" />
+  <!-- <Teleport to="body">
+    <CalendarModal v-if="isModalOpen" @close="toggleModal" />
+  </Teleport> -->
+  <CalendarModal v-if="isModalOpen" @close="toggleModal" :day="day" />
 </template>
 
 <script>
@@ -46,7 +48,9 @@ export default {
   },
   methods: {
     toggleModal() {
-      this.isModalOpen = !this.isModalOpen;
+      if (this.isCurrentMonth) {
+        this.isModalOpen = !this.isModalOpen;
+      }
     },
   },
   computed: {
@@ -68,6 +72,10 @@ export default {
   @include breakpoint.desktop {
     padding: 16px 35px;
   }
+}
+
+.calendar-day:hover {
+  cursor: pointer;
 }
 
 .calendar-day--not-current {

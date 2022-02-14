@@ -65,6 +65,6 @@ export default {
   @extend %content-title;
   padding: 0 10px;
   display: inline-block;
-  width: 200px;
+  width: 220px;
 }
 </style>
