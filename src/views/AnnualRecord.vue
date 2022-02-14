@@ -49,7 +49,7 @@ export default {
 <style lang="scss" scoped>
 h3 {
   @extend %page-title;
-  margin: 45px auto 0;
+  margin: 0 auto;
   width: fit-content;
 }
 
@@ -64,6 +64,11 @@ h3 {
   max-height: 1000px;
   overflow-y: scroll;
   overflow-x: auto;
+
+  @include breakpoint.tablet {
+    width: 80%;
+    height: 600px;
+  }
 
   &-content {
     width: 100%;
