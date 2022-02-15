@@ -1,0 +1,22 @@
+.custom-timepicker {
+  .ant-input {
+    border: 0;
+  }
+
+  .ant-input:focus {
+    box-shadow: none;
+  }
+
+  .anticon {
+    width: 0;
+    height: 0;
+    border: 8px solid;
+    margin-left: auto;
+    border-color: color.$black #fff #fff #fff;
+    cursor: pointer;
+
+    svg {
+      display: none;
+    }
+  }
+}
