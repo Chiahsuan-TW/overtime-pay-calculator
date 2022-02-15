@@ -17,7 +17,9 @@
       <AnnualList />
     </div>
 
-    <ProcedureButton class="complete-button">完成</ProcedureButton>
+    <div class="bottom">
+      <ProcedureButton class="complete-button">完成</ProcedureButton>
+    </div>
   </div>
 </template>
 <script>
@@ -94,6 +96,11 @@ h3 {
   .modal-content-item {
     background-color: color.$yellow;
   }
+}
+
+.bottom {
+  width: fit-content;
+  margin: 50px auto 0;
 }
 
 .complete-button {

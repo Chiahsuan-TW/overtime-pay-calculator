@@ -54,6 +54,7 @@ export default {
 
     h4 {
       @extend %content-title;
+      text-align: center;
 
       @include breakpoint.desktop {
         text-align: left;
