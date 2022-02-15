@@ -10,14 +10,18 @@
         <div class="on-duty">
           <span>上班時間</span>
           <a-time-picker
-            :default-value="moment('12:08', 'HH:mm')"
+            class="custom-timepicker"
+            :allowClear="false"
+            :default-value="moment('08:00', 'HH:mm')"
             format="HH:mm"
           />
         </div>
         <div class="off-duty">
           <span>下班時間</span>
           <a-time-picker
-            :default-value="moment('00:00', 'HH:mm')"
+            class="custom-timepicker"
+            :allowClear="false"
+            :default-value="moment('17:00', 'HH:mm')"
             format="HH:mm"
           />
         </div>
@@ -153,9 +157,11 @@ export default {
 
     select {
       @extend %content-small;
-    }
-    @include breakpoint.tablet {
-      
+      width: 150px;
+
+      @include breakpoint.tablet {
+        width: 184px;
+      }
     }
   }
 
