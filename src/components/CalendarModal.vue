@@ -10,28 +10,32 @@
         <div class="on-duty">
           <span>上班時間</span>
           <a-time-picker
+            @change="getOnDutyTime"
             class="custom-timepicker"
             :allowClear="false"
-            :default-value="moment('08:00', 'HH:mm')"
+            :default-value="onDuty"
             format="HH:mm"
+            :disabled="isEnabled"
           />
         </div>
         <div class="off-duty">
           <span>下班時間</span>
           <a-time-picker
+            @change="getOffDutyTime"
             class="custom-timepicker"
             :allowClear="false"
-            :default-value="moment('17:00', 'HH:mm')"
+            :default-value="offDuty"
             format="HH:mm"
+            :disabled="isEnabled"
           />
         </div>
         <div class="day-off">
           <div>
-            <input type="checkbox" id="day-off" />
+            <input type="checkbox" id="day-off" v-model="isEnabled" />
             <label for="day-off">請假</label>
           </div>
           <div>
-            <select name="day-off" id="day-off-select">
+            <select name="day-off" id="day-off-select" :disabled="!isEnabled">
               <option value="">請選擇假別</option>
               <option value="personal leave">事假</option>
               <option value="annual leave">特休</option>
@@ -40,13 +44,10 @@
           </div>
         </div>
         <div class="button-group">
-          <ProcedureButton @click="$emit('close')" class="cancel"
-            >取消</ProcedureButton
-          >
-          <ProcedureButton class="confirm">確認</ProcedureButton>
+          <ProcedureButton @click="$emit('close')" class="cancel">取消</ProcedureButton>
+          <ProcedureButton @click="clickConfirm" class="confirm">確認</ProcedureButton>
         </div>
       </div>
-      <!-- <pre>{{ day }}</pre> -->
     </div>
   </div>
 </template>
@@ -56,16 +57,37 @@ import moment from "moment";
 import ProcedureButton from "./ProcedureButton.vue";
 
 export default {
-  methods: {
-    moment,
-  },
   props: {
     day: {
       type: Object,
       required: true,
     },
   },
+  data() {
+    return {
+      onDuty: moment("00:00", "HH:mm"),
+      offDuty: moment("17:00", "HH:mm"),
+      isEnabled: false,
+    };
+  },
   components: { ProcedureButton },
+  methods: {
+    moment,
+
+    getOnDutyTime(value) {
+      this.onDuty = value;
+    },
+    getOffDutyTime(value) {
+      this.offDuty = value;
+    },
+    clickConfirm() {
+      let data = {
+        onDuty: this.onDuty.format("HH:mm"),
+        offDuty: this.offDuty.format("HH:mm"),
+      };
+      this.$store.commit("saveRecordingData", data);
+    },
+  },
   computed: {
     weekday() {
       const index = this.day.weekday;
@@ -78,7 +100,6 @@ export default {
         5: "星期五",
         6: "星期六",
       };
-
       return dayList[index];
     },
     formateDate() {
