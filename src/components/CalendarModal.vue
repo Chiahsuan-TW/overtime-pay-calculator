@@ -73,7 +73,6 @@ export default {
   components: { ProcedureButton },
   methods: {
     moment,
-
     getOnDutyTime(value) {
       this.onDuty = value;
     },
@@ -108,6 +107,17 @@ export default {
       const month = dateList[1];
       const day = dateList[2];
       return `${year} ${month}月${day}日`;
+    },
+  },
+  watch: {
+    isEnabled: function () {
+      if (this.isEnabled) {
+        this.onDuty = moment("00:00", "HH:mm");
+        this.offDuty = moment("00:00", "HH:mm");
+        console.log("moment object", this.onDuty, "format", this.onDuty.format("HH:mm"));
+        console.log("moment object", this.offDuty, "format", this.offDuty.format("HH:mm"));
+      }
+      return;
     },
   },
 };
