@@ -20,6 +20,7 @@ const routes = [
       {
         path: "/Info",
         name: "Info",
+        props: true,
         component: () => import("@/views/Info.vue"),
       },
       {

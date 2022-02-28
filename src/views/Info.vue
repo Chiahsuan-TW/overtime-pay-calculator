@@ -5,11 +5,11 @@
 
     <div class="modal-content">
       <div class="modal-content-item">
-        <Dropdown :optionList="workTypeList">工作類型</Dropdown>
+        <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType">工作類型</Dropdown>
       </div>
 
       <div class="modal-content-item">
-        <Dropdown :optionList="workPatternList">工作型態</Dropdown>
+        <Dropdown :optionList="workPatternList" @selectTypeValue="selectWorkPattern">工作型態</Dropdown>
       </div>
 
       <div class="modal-content-item">
@@ -17,11 +17,7 @@
           <div class="img-frame">
             <img src="../assets/images/star.png" alt="star icon" />
           </div>
-          <input
-            id="salary"
-            type="number"
-            :placeholder="`薪資: ${minimumWage}`"
-          />
+          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" />
           <label for="salary" class="pen" @click="toggleDropdown">
             <img src="../assets/images/pen.png" alt="pen" />
           </label>
@@ -79,9 +75,20 @@ export default {
       wage: "",
       currentStep: 1,
       firstDayOfWork: Moment,
+      workType: "",
+      workPattern: "",
     };
   },
-  methods: {},
+  methods: {
+    selectWorkType(value) {
+      // console.log("工作類型", value);
+      this.workType = value;
+    },
+    selectWorkPattern(value) {
+      // console.log("工作型態", value);
+      this.workPattern = value;
+    },
+  },
   computed: {
     today() {
       let today = new Date().toISOString();

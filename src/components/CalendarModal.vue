@@ -35,7 +35,7 @@
             <label for="day-off">請假</label>
           </div>
           <div>
-            <select name="day-off" id="day-off-select" :disabled="!isEnabled">
+            <select name="day-off" id="day-off-select" :disabled="!isEnabled" v-model="leaveType">
               <option value="">請選擇假別</option>
               <option value="personal leave">事假</option>
               <option value="annual leave">特休</option>
@@ -68,6 +68,7 @@ export default {
       onDuty: moment("00:00", "HH:mm"),
       offDuty: moment("17:00", "HH:mm"),
       isEnabled: false,
+      leaveType: "",
     };
   },
   components: { ProcedureButton },
@@ -81,8 +82,17 @@ export default {
     },
     clickConfirm() {
       let data = {
+        date: this.day.date,
         onDuty: this.onDuty.format("HH:mm"),
         offDuty: this.offDuty.format("HH:mm"),
+        isDayOff: this.isEnabled,
+        leaveType: this.leaveType,
+        workType: "漁工", //在別頁
+        workPattern: "", //在別頁
+        firstDay: "2016-10-1", //在別頁
+        // workingHours: "",
+        // overtimeHours: 10,
+        // overtimePay: 2000,
       };
       this.$store.commit("saveRecordingData", data);
     },
@@ -114,10 +124,10 @@ export default {
       if (this.isEnabled) {
         this.onDuty = moment("00:00", "HH:mm");
         this.offDuty = moment("00:00", "HH:mm");
-        console.log("moment object", this.onDuty, "format", this.onDuty.format("HH:mm"));
-        console.log("moment object", this.offDuty, "format", this.offDuty.format("HH:mm"));
+        // console.log("moment object", this.onDuty, "format", this.onDuty.format("HH:mm"));
+        // console.log("moment object", this.offDuty, "format", this.offDuty.format("HH:mm"));
       }
-      return;
+      this.leaveType = "";
     },
   },
 };

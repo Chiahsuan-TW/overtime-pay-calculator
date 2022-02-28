@@ -9,12 +9,7 @@
   </div>
 
   <ul :class="['dropdown-menu', { unfolded: unfolded }]">
-    <li
-      v-for="(option, index) in optionList"
-      :key="index"
-      :option="option"
-      @click="selectWorkType(option)"
-    >
+    <li v-for="(option, index) in optionList" :key="index" :option="option" @click="selectWorkType(option)">
       {{ option }}
     </li>
   </ul>
@@ -23,6 +18,7 @@
 <script>
 export default {
   name: "Dropdown",
+  emits: ["selectTypeValue"],
   props: {
     optionList: {
       type: Array,
@@ -41,6 +37,13 @@ export default {
     selectWorkType(workType) {
       this.selectedWrokType = workType;
       this.toggleDropdown();
+    },
+  },
+  watch: {
+    selectedWrokType: {
+      handler(newValue) {
+        this.$emit("selectTypeValue", newValue);
+      },
     },
   },
 };
