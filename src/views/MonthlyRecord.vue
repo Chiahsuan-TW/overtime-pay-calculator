@@ -5,10 +5,7 @@
     <div class="modal-content">
       <div class="calendar-month">
         <div class="calendar-month-header">
-          <CalendarDateIndicator
-            :selected-date="selectedDate"
-            @dateSelected="selectDate"
-          />
+          <CalendarDateIndicator :selected-date="selectedDate" @dateSelected="selectDate" />
         </div>
         <table>
           <CalendarWeekdays />
@@ -85,6 +82,7 @@ export default {
       currentStep: 2,
     };
   },
+  props: ["userInput"],
   methods: {
     selectDate(newSelectedDate) {
       this.selectedDate = newSelectedDate;
@@ -95,11 +93,7 @@ export default {
   },
   computed: {
     days() {
-      return [
-        ...this.previousMonthDays,
-        ...this.currentMonthDays,
-        ...this.nextMonthDays,
-      ];
+      return [...this.previousMonthDays, ...this.currentMonthDays, ...this.nextMonthDays];
     },
     today() {
       return dayjs().format("YYYY-MM-DD");
@@ -118,46 +112,30 @@ export default {
     currentMonthDays() {
       return [...Array(this.numberOfDaysInMonth)].map((day, index) => {
         return {
-          date: dayjs(`${this.year}-${this.month}-${index + 1}`).format(
-            "YYYY-MM-DD"
-          ),
+          date: dayjs(`${this.year}-${this.month}-${index + 1}`).format("YYYY-MM-DD"),
           isCurrentMonth: true,
-          weekday: this.getWeekday(
-            dayjs(`${this.year}-${this.month}-${index + 1}`).format(
-              "YYYY-MM-DD"
-            )
-          ),
+          weekday: this.getWeekday(dayjs(`${this.year}-${this.month}-${index + 1}`).format("YYYY-MM-DD")),
         };
       });
     },
     previousMonthDays() {
       const firstDayOfTheMonth = this.getWeekday(this.currentMonthDays[0].date);
-      const previousMonth = dayjs(`${this.year}-${this.month}-01`).subtract(
-        1,
-        "month"
-      );
-      const numberOfDaysInPreviousMonth = firstDayOfTheMonth
-        ? firstDayOfTheMonth - 1
-        : 6;
-
+      const previousMonth = dayjs(`${this.year}-${this.month}-01`).subtract(1, "month");
+      const numberOfDaysInPreviousMonth = firstDayOfTheMonth ? firstDayOfTheMonth - 1 : 6;
       const lastMondayDayOfMonth = dayjs(this.currentMonthDays[0].date)
         .subtract(numberOfDaysInPreviousMonth, "day")
         .date();
       return [...Array(numberOfDaysInPreviousMonth)].map((day, index) => {
         return {
-          date: dayjs(
-            `${previousMonth.year()}-${previousMonth.month() + 1}-${
-              lastMondayDayOfMonth + index
-            }`
-          ).format("YYYY-MM-DD"),
+          date: dayjs(`${previousMonth.year()}-${previousMonth.month() + 1}-${lastMondayDayOfMonth + index}`).format(
+            "YYYY-MM-DD"
+          ),
           isCurrentMonth: false,
         };
       });
     },
     nextMonthDays() {
-      const lastDayOfTheMonthWeekday = this.getWeekday(
-        `${this.year}-${this.month}-${this.currentMonthDays.length}`
-      );
+      const lastDayOfTheMonthWeekday = this.getWeekday(`${this.year}-${this.month}-${this.currentMonthDays.length}`);
       const nextMonth = dayjs(`${this.year}-${this.month}-01`).add(1, "month");
       const visibleNumberOfDaysFromNextMonth = lastDayOfTheMonthWeekday
         ? 7 - lastDayOfTheMonthWeekday
@@ -165,13 +143,14 @@ export default {
 
       return [...Array(visibleNumberOfDaysFromNextMonth)].map((day, index) => {
         return {
-          date: dayjs(
-            `${nextMonth.year()}-${nextMonth.month() + 1}-${index + 1}`
-          ).format("YYYY-MM-DD"),
+          date: dayjs(`${nextMonth.year()}-${nextMonth.month() + 1}-${index + 1}`).format("YYYY-MM-DD"),
           isCurrentMonth: false,
         };
       });
     },
+  },
+  beforeRouteEnter(to, from) {
+    console.log(to.params);
   },
 };
 </script>

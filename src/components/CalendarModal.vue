@@ -87,14 +87,9 @@ export default {
         offDuty: this.offDuty.format("HH:mm"),
         isDayOff: this.isEnabled,
         leaveType: this.leaveType,
-        workType: "漁工", //在別頁
-        workPattern: "", //在別頁
-        firstDay: "2016-10-1", //在別頁
-        // workingHours: "",
-        // overtimeHours: 10,
-        // overtimePay: 2000,
       };
       this.$store.commit("saveRecordingData", data);
+      this.$emit("close");
     },
   },
   computed: {
@@ -124,8 +119,6 @@ export default {
       if (this.isEnabled) {
         this.onDuty = moment("00:00", "HH:mm");
         this.offDuty = moment("00:00", "HH:mm");
-        // console.log("moment object", this.onDuty, "format", this.onDuty.format("HH:mm"));
-        // console.log("moment object", this.offDuty, "format", this.offDuty.format("HH:mm"));
       }
       this.leaveType = "";
     },

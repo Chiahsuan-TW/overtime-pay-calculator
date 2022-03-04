@@ -23,11 +23,14 @@ export default {
     optionList: {
       type: Array,
     },
+    selectedType: {
+      type: String,
+    },
   },
   data() {
     return {
       unfolded: false,
-      selectedWrokType: "",
+      selectedWrokType: this.selectedType || "",
     };
   },
   methods: {

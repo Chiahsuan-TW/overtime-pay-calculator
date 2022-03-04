@@ -5,11 +5,18 @@
 
     <div class="modal-content">
       <div class="modal-content-item">
-        <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType">工作類型</Dropdown>
+        <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType" :selectedType="basic_info.workType"
+          >工作類型</Dropdown
+        >
       </div>
 
       <div class="modal-content-item">
-        <Dropdown :optionList="workPatternList" @selectTypeValue="selectWorkPattern">工作型態</Dropdown>
+        <Dropdown
+          :optionList="workPatternList"
+          @selectTypeValue="selectWorkPattern"
+          :selectedType="basic_info.workPattern"
+          >工作型態</Dropdown
+        >
       </div>
 
       <div class="modal-content-item">
@@ -17,7 +24,7 @@
           <div class="img-frame">
             <img src="../assets/images/star.png" alt="star icon" />
           </div>
-          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" />
+          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" v-model="basic_info.wage" />
           <label for="salary" class="pen" @click="toggleDropdown">
             <img src="../assets/images/pen.png" alt="pen" />
           </label>
@@ -33,11 +40,12 @@
         </div>
         <a-date-picker
           :allowClear="false"
-          v-model:value="firstDayOfWork"
+          v-model:value="basic_info.firstDayOfWork"
           dropdownClassName="custom-calendar"
           class="custom-datepicker"
-          :placeholder="today"
+          :placeholder="placeholderDate"
         >
+          <!-- :placeholder="today" -->
           <!-- <template #renderExtraFooter>
             <div class="custom-footer">
               <button>取消</button>
@@ -48,7 +56,7 @@
       </div>
 
       <router-link :to="{ name: 'MonthlyRecord' }">
-        <ProcedureButton>下一步</ProcedureButton>
+        <ProcedureButton @click="saveUserInfo(basic_info)">下一步</ProcedureButton>
       </router-link>
     </div>
   </div>
@@ -72,29 +80,50 @@ export default {
       workTypeList: ["廠工", "建築工", "看護", "漁工"],
       workPatternList: ["週休二日", "非週休二日"],
       minimumWage: "25250",
-      wage: "",
       currentStep: 1,
-      firstDayOfWork: Moment,
-      workType: "",
-      workPattern: "",
+      placeholderDate: new Date().toISOString().split("T")[0],
+      basic_info: {
+        workType: "",
+        workPattern: "",
+        wage: "",
+        firstDayOfWork: Moment,
+      },
     };
   },
+  created() {
+    this.getVuexData();
+  },
+
   methods: {
     selectWorkType(value) {
-      // console.log("工作類型", value);
-      this.workType = value;
+      this.basic_info.workType = value;
     },
     selectWorkPattern(value) {
-      // console.log("工作型態", value);
-      this.workPattern = value;
+      this.basic_info.workPattern = value;
+    },
+    saveUserInfo(userInput) {
+      this.$store.commit("saveUserInfo", userInput);
+    },
+    getVuexData() {
+      if (Object.keys(this.$store.state.userInfo.basic_info).length !== 0) {
+        this.basic_info.workType = this.$store.state.userInfo.basic_info.workType;
+        this.basic_info.workPattern = this.$store.state.userInfo.basic_info.workPattern;
+        this.basic_info.wage = this.$store.state.userInfo.basic_info.wage;
+        this.basic_info.firstDayOfWork = this.$store.state.userInfo.basic_info.firstDayOfWork;
+        this.basic_info.placeholderDate = this.$store.state.userInfo.basic_info.firstDayOfWork;
+        return;
+      }
+      return;
     },
   },
+
   computed: {
-    today() {
-      let today = new Date().toISOString();
-      today = today.split("T")[0];
-      return today;
-    },
+    // today() {
+    //   let today = new Date().toISOString();
+    //   today = today.split("T")[0];
+    //   // console.log("今日", today);
+    //   return today;
+    // },
   },
 };
 </script>
