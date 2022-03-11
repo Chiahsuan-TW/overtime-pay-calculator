@@ -82,6 +82,14 @@ export default {
       minimumWage: "25250",
       currentStep: 1,
       placeholderDate: new Date().toISOString().split("T")[0],
+      //[{company:"",
+      // workType: "",
+      // workPattern: "",
+      // wage: "",
+      // firstDayOfWork: Moment,},{ workType: "",
+      // workPattern: "",
+      // wage: "",
+      // firstDayOfWork: Moment,}]
       basic_info: {
         workType: "",
         workPattern: "",
