@@ -125,7 +125,7 @@ export default {
     },
     updateCompanyName(e) {
       this.$store.commit("updateCompanyName", {
-        value: e.target.value || "company4",
+        value: e.target.value || ` 公司${this.companyIndex + 1}`,
         index: this.companyIndex,
       });
     },
