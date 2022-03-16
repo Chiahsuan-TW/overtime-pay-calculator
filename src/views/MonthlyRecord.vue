@@ -149,9 +149,9 @@ export default {
       });
     },
   },
-  beforeRouteEnter(to, from) {
-    console.log(to.params);
-  },
+  // beforeRouteEnter(to, from) {
+  //   console.log(to.params);
+  // },
 };
 </script>
 

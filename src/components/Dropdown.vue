@@ -3,7 +3,7 @@
     <div class="img-frame">
       <img src="../assets/images/star.png" alt="star icon" />
     </div>
-    <p v-if="selectedWrokType">{{ selectedWrokType }}</p>
+    <p v-if="selectedType">{{ selectedType }}</p>
     <p v-else><slot></slot></p>
     <button class="triangle" @click="toggleDropdown"></button>
   </div>
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import CalendarDateIndicatorVue from "./CalendarDateIndicator.vue";
 export default {
   name: "Dropdown",
   emits: ["selectTypeValue"],
@@ -30,25 +31,19 @@ export default {
   data() {
     return {
       unfolded: false,
-      selectedWrokType: this.selectedType || "",
     };
   },
+  created() {},
   methods: {
     toggleDropdown() {
       this.unfolded = !this.unfolded;
     },
     selectWorkType(workType) {
-      this.selectedWrokType = workType;
+      this.$emit("selectTypeValue", workType);
       this.toggleDropdown();
     },
   },
-  watch: {
-    selectedWrokType: {
-      handler(newValue) {
-        this.$emit("selectTypeValue", newValue);
-      },
-    },
-  },
+  watch: {},
 };
 </script>
 

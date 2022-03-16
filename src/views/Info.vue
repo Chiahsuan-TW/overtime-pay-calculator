@@ -1,11 +1,24 @@
 <template>
   <h3>基本資料</h3>
   <div class="modal">
+    <nav>
+      <a
+        v-for="(company, index) in collectionUserCompany"
+        :key="index"
+        @click="switchTab(index)"
+        :class="{ currentTab: index === companyIndex ? true : false }"
+        >{{ company }}</a
+      >
+    </nav>
     <Stepper :currentStep="currentStep" />
-
     <div class="modal-content">
+      <div class="companyName">
+        <span>公司名字:</span>
+        <input type="text" :value="companyName" @input="updateCompanyName" />
+      </div>
+
       <div class="modal-content-item">
-        <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType" :selectedType="basic_info.workType"
+        <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType" :selectedType="currentUserData.workType"
           >工作類型</Dropdown
         >
       </div>
@@ -14,7 +27,7 @@
         <Dropdown
           :optionList="workPatternList"
           @selectTypeValue="selectWorkPattern"
-          :selectedType="basic_info.workPattern"
+          :selectedType="currentUserData.workPattern"
           >工作型態</Dropdown
         >
       </div>
@@ -24,7 +37,7 @@
           <div class="img-frame">
             <img src="../assets/images/star.png" alt="star icon" />
           </div>
-          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" v-model="basic_info.wage" />
+          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" v-model="currentUserData.wage" />
           <label for="salary" class="pen" @click="toggleDropdown">
             <img src="../assets/images/pen.png" alt="pen" />
           </label>
@@ -40,24 +53,37 @@
         </div>
         <a-date-picker
           :allowClear="false"
-          v-model:value="basic_info.firstDayOfWork"
+          v-model:value="currentUserData.firstDayOfWork"
           dropdownClassName="custom-calendar"
           class="custom-datepicker"
           :placeholder="placeholderDate"
         >
           <!-- :placeholder="today" -->
-          <!-- <template #renderExtraFooter>
+          <template #renderExtraFooter>
             <div class="custom-footer">
               <button>取消</button>
               <button>確認</button>
             </div>
-          </template> -->
+          </template>
         </a-date-picker>
       </div>
-
-      <router-link :to="{ name: 'MonthlyRecord' }">
-        <ProcedureButton @click="saveUserInfo(basic_info)">下一步</ProcedureButton>
-      </router-link>
+      <!-- <div class="modal-content-item lastDay">
+        <p>工作結束日</p>
+        <a-date-picker
+          :allowClear="false"
+          v-model:value="basic_info.firstDayOfWork"
+          dropdownClassName="custom-calendar"
+          class="custom-datepicker"
+          :placeholder="placeholderDate"
+        >
+        </a-date-picker>
+      </div> -->
+      <!-- <div class="warp_button">
+        <button @click="clickConfirm">確認</button>
+        <router-link :to="{ name: 'MonthlyRecord' }">
+          <ProcedureButton @click="saveToDatabase">下一步</ProcedureButton>
+        </router-link>
+      </div> -->
     </div>
   </div>
 </template>
@@ -65,15 +91,16 @@
 <script>
 import Dropdown from "../components/Dropdown.vue";
 import Stepper from "../components/Stepper.vue";
-import ProcedureButton from "../components/ProcedureButton.vue";
+// import ProcedureButton from "../components/ProcedureButton.vue";
 import { Moment } from "moment";
+import { mapState } from "vuex";
 
 export default {
   name: "Info",
   components: {
-    Dropdown,
     Stepper,
-    ProcedureButton,
+    Dropdown,
+    // ProcedureButton,
   },
   data() {
     return {
@@ -82,20 +109,8 @@ export default {
       minimumWage: "25250",
       currentStep: 1,
       placeholderDate: new Date().toISOString().split("T")[0],
-      //[{company:"",
-      // workType: "",
-      // workPattern: "",
-      // wage: "",
-      // firstDayOfWork: Moment,},{ workType: "",
-      // workPattern: "",
-      // wage: "",
-      // firstDayOfWork: Moment,}]
-      basic_info: {
-        workType: "",
-        workPattern: "",
-        wage: "",
-        firstDayOfWork: Moment,
-      },
+      currentUserData: {},
+      companyIndex: 0,
     };
   },
   created() {
@@ -103,40 +118,59 @@ export default {
   },
 
   methods: {
+    getVuexData() {
+      this.currentUserData = this.$store.state.allUserInfo[this.companyIndex];
+    },
+
+    switchTab(index) {
+      //改變index
+      this.companyIndex = index;
+      //tab切換把basic_info資料更換
+      this.currentUserData = this.$store.state.allUserInfo[this.companyIndex];
+    },
+    updateCompanyName(e) {
+      this.$store.commit("updateCompanyName", {
+        value: e.target.value,
+        index: this.companyIndex,
+      });
+    },
     selectWorkType(value) {
-      this.basic_info.workType = value;
+      this.currentUserData.workType = value;
     },
     selectWorkPattern(value) {
-      this.basic_info.workPattern = value;
+      this.currentUserData.workPattern = value;
     },
-    saveUserInfo(userInput) {
-      this.$store.commit("saveUserInfo", userInput);
-    },
-    getVuexData() {
-      if (Object.keys(this.$store.state.userInfo.basic_info).length !== 0) {
-        this.basic_info.workType = this.$store.state.userInfo.basic_info.workType;
-        this.basic_info.workPattern = this.$store.state.userInfo.basic_info.workPattern;
-        this.basic_info.wage = this.$store.state.userInfo.basic_info.wage;
-        this.basic_info.firstDayOfWork = this.$store.state.userInfo.basic_info.firstDayOfWork;
-        this.basic_info.placeholderDate = this.$store.state.userInfo.basic_info.firstDayOfWork;
-        return;
-      }
-      return;
+    clickConfirm() {
+      //目前公司名字
+      let currentPageCompany = this.userCompany[this.inputCompanyNameIndex];
+      //目前使用者資料
+      let currentPageUserInfo = this.basic_info;
+      //切換同時存回原本陣列的值
+      const currentData = {
+        name: currentPageCompany,
+        basic_info: currentPageUserInfo,
+      };
+      this.allUserInfo.splice(this.inputCompanyNameIndex, 1, currentData);
+      this.$store.commit("saveUserInfo", this.allUserInfo);
     },
   },
-
   computed: {
-    // today() {
-    //   let today = new Date().toISOString();
-    //   today = today.split("T")[0];
-    //   // console.log("今日", today);
-    //   return today;
-    // },
+    collectionUserCompany() {
+      return this.$store.getters.collectionUserCompany;
+    },
+    ...mapState({
+      companyName: function (state) {
+        return state.allUserInfo[this.companyIndex].companyName;
+      },
+    }),
   },
 };
 </script>
 
 <style scoped lang="scss">
+* {
+  // outline: 1px solid red;
+}
 h3 {
   @extend %page-title;
   width: fit-content;
@@ -157,6 +191,30 @@ h3 {
   &-content {
     max-width: 330px;
     margin: 60px auto 0;
+  }
+}
+.modal nav {
+  display: flex;
+  vertical-align: center;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+  & > a {
+    vertical-align: middle;
+    text-align: center;
+    color: color.$gray;
+    border-radius: 10px 10px 0px 0px;
+    font-weight: 600;
+    width: 145px;
+    line-height: 45px;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .currentTab {
+    color: #fff;
+    background: color.$primary-light;
   }
 }
 
@@ -229,5 +287,27 @@ a {
   display: block;
   width: fit-content;
   margin: 52px auto 0;
+}
+.companyName {
+  @extend %content-large;
+  font-weight: bold;
+  > span {
+    margin-right: 16px;
+  }
+  > input {
+    border: 1px;
+  }
+  margin-bottom: 30px;
+}
+.warp_button {
+  margin-top: 20px;
+  button {
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    &:hover {
+      background: color.$primary-light;
+    }
+  }
 }
 </style>

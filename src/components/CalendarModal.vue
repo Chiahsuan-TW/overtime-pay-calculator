@@ -81,6 +81,7 @@ export default {
       this.offDuty = value;
     },
     clickConfirm() {
+      //  存入vuex
       let data = {
         date: this.day.date,
         onDuty: this.onDuty.format("HH:mm"),
@@ -88,8 +89,10 @@ export default {
         isDayOff: this.isEnabled,
         leaveType: this.leaveType,
       };
+      // console.log("目前資料", data);
       this.$store.commit("saveRecordingData", data);
       this.$emit("close");
+      this.$store.dispatch("saveToDatabase", data);
     },
   },
   computed: {
