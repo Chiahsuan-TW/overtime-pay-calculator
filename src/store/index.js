@@ -4,10 +4,6 @@ import { Moment } from "moment";
 
 export default createStore({
   state: {
-    userInfo: {
-      name: "公司1",
-      tasking_time: {},
-    },
     allUserInfo: [
       {
         userID: "wendy@gmail.com.tw",
@@ -126,9 +122,6 @@ export default createStore({
     },
     updateCompanyName(state, data) {
       const { value, index } = data;
-      console.log("confirm", value, index);
-      console.log(value);
-      console.log(state.allUserInfo[index]);
       state.allUserInfo[index].companyName = value;
     },
   },

@@ -58,32 +58,27 @@
           class="custom-datepicker"
           :placeholder="placeholderDate"
         >
-          <!-- :placeholder="today" -->
-          <template #renderExtraFooter>
-            <div class="custom-footer">
-              <button>取消</button>
-              <button>確認</button>
-            </div>
-          </template>
         </a-date-picker>
       </div>
-      <!-- <div class="modal-content-item lastDay">
-        <p>工作結束日</p>
+      <div class="modal-content-item">
+        <div class="dropdown-title">
+          <div class="img-frame">
+            <img src="../assets/images/calendar.png" alt="calendar icon" />
+          </div>
+          <p>工作結束日</p>
+        </div>
         <a-date-picker
           :allowClear="false"
-          v-model:value="basic_info.firstDayOfWork"
+          v-model:value="currentUserData.lastDayOfWork"
           dropdownClassName="custom-calendar"
           class="custom-datepicker"
           :placeholder="placeholderDate"
         >
         </a-date-picker>
-      </div> -->
-      <!-- <div class="warp_button">
-        <button @click="clickConfirm">確認</button>
-        <router-link :to="{ name: 'MonthlyRecord' }">
-          <ProcedureButton @click="saveToDatabase">下一步</ProcedureButton>
-        </router-link>
-      </div> -->
+      </div>
+      <router-link :to="{ name: 'MonthlyRecord' }">
+        <ProcedureButton @click="saveToDatabase">下一步</ProcedureButton>
+      </router-link>
     </div>
   </div>
 </template>
@@ -91,7 +86,7 @@
 <script>
 import Dropdown from "../components/Dropdown.vue";
 import Stepper from "../components/Stepper.vue";
-// import ProcedureButton from "../components/ProcedureButton.vue";
+import ProcedureButton from "../components/ProcedureButton.vue";
 import { Moment } from "moment";
 import { mapState } from "vuex";
 
@@ -100,7 +95,7 @@ export default {
   components: {
     Stepper,
     Dropdown,
-    // ProcedureButton,
+    ProcedureButton,
   },
   data() {
     return {
@@ -130,7 +125,7 @@ export default {
     },
     updateCompanyName(e) {
       this.$store.commit("updateCompanyName", {
-        value: e.target.value,
+        value: e.target.value || "company4",
         index: this.companyIndex,
       });
     },
@@ -139,19 +134,6 @@ export default {
     },
     selectWorkPattern(value) {
       this.currentUserData.workPattern = value;
-    },
-    clickConfirm() {
-      //目前公司名字
-      let currentPageCompany = this.userCompany[this.inputCompanyNameIndex];
-      //目前使用者資料
-      let currentPageUserInfo = this.basic_info;
-      //切換同時存回原本陣列的值
-      const currentData = {
-        name: currentPageCompany,
-        basic_info: currentPageUserInfo,
-      };
-      this.allUserInfo.splice(this.inputCompanyNameIndex, 1, currentData);
-      this.$store.commit("saveUserInfo", this.allUserInfo);
     },
   },
   computed: {
@@ -186,6 +168,13 @@ h3 {
 
   @include breakpoint.tablet {
     width: 80%;
+    max-width: 1094px;
+    max-height: 600px;
+    overflow-x: auto;
+    overflow-y: scroll;
+    margin: 40px auto 0;
+    box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);
+    border-radius: 16px;
   }
 
   &-content {
@@ -298,16 +287,5 @@ a {
     border: 1px;
   }
   margin-bottom: 30px;
-}
-.warp_button {
-  margin-top: 20px;
-  button {
-    font-size: 15px;
-    padding: 10px;
-    border-radius: 10px;
-    &:hover {
-      background: color.$primary-light;
-    }
-  }
 }
 </style>
