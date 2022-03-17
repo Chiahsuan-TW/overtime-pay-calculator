@@ -14,7 +14,7 @@
     <div class="modal-content">
       <div class="companyName">
         <span>公司名字:</span>
-        <input type="text" :value="companyName" @input="updateCompanyName" />
+        <input type="text" :value="companyName" @input="updateCompanyName" maxlength="12" />
       </div>
 
       <div class="modal-content-item">
