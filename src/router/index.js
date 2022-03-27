@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "../store";
 
 const routes = [
   {
@@ -21,6 +22,14 @@ const routes = [
         path: "/Info",
         name: "Info",
         component: () => import("@/views/Info.vue"),
+        beforeEnter: async (to, from) => {
+          try {
+            await store.dispatch("getDataBase");
+          } catch (error) {
+            console.log(error);
+          }
+          return true;
+        },
       },
       {
         path: "/MonthlyRecord",

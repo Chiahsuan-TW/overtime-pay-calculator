@@ -5,29 +5,36 @@
       <a
         v-for="(company, index) in collectionUserCompany"
         :key="index"
-        @click="switchTab(index)"
-        :class="{ currentTab: index === companyIndex ? true : false }"
+        @click="currentIndex = index"
+        :class="{ currentTab: index === currentIndex ? true : false }"
         >{{ company }}</a
       >
     </nav>
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
-      <div class="companyName">
-        <span>公司名字:</span>
-        <input type="text" :value="companyName" @input="updateCompanyName" maxlength="12" />
-      </div>
+      <div class="modal-content-item companyName">
+        <pre>
+          {{ editingCompanies[currentIndex] }}
+        </pre>
 
+        <span>公司名稱:</span>
+        <input type="text" :value="editingCompanies[currentIndex].companyName" @input="updateCompanyName" />
+
+        <!-- <input type="text" :value="companyName" @input="updateCompanyName" maxlength="12" /> -->
+      </div>
+      <!-- <p>{{ currentUserInfoData }}</p> -->
+      <!-- <div class="modal-content-item"> -->
+      <!-- <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType" :selectedType="userInfo.workType"
+          >工作類型</Dropdown
+        > -->
+      <!-- </div> -->
       <div class="modal-content-item">
-        <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType" :selectedType="currentUserData.workType"
+        <Dropdown :optionList="workTypeList" v-model:TypeValue="editingCompanies[currentIndex].workType"
           >工作類型</Dropdown
         >
       </div>
-
       <div class="modal-content-item">
-        <Dropdown
-          :optionList="workPatternList"
-          @selectTypeValue="selectWorkPattern"
-          :selectedType="currentUserData.workPattern"
+        <Dropdown :optionList="workPatternList" v-model:TypeValue="editingCompanies[currentIndex].workPattern"
           >工作型態</Dropdown
         >
       </div>
@@ -37,13 +44,12 @@
           <div class="img-frame">
             <img src="../assets/images/star.png" alt="star icon" />
           </div>
-          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" v-model="currentUserData.wage" />
+          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" v-model="wage" />
           <label for="salary" class="pen" @click="toggleDropdown">
             <img src="../assets/images/pen.png" alt="pen" />
           </label>
         </div>
       </div>
-
       <div class="modal-content-item">
         <div class="dropdown-title">
           <div class="img-frame">
@@ -53,7 +59,7 @@
         </div>
         <a-date-picker
           :allowClear="false"
-          v-model:value="currentUserData.firstDayOfWork"
+          v-model="firstDayOfWork"
           dropdownClassName="custom-calendar"
           class="custom-datepicker"
           :placeholder="placeholderDate"
@@ -69,7 +75,7 @@
         </div>
         <a-date-picker
           :allowClear="false"
-          v-model:value="currentUserData.lastDayOfWork"
+          v-model="lastDayOfWork"
           dropdownClassName="custom-calendar"
           class="custom-datepicker"
           :placeholder="placeholderDate"
@@ -77,7 +83,7 @@
         </a-date-picker>
       </div>
       <router-link :to="{ name: 'MonthlyRecord' }">
-        <ProcedureButton @click="saveToDatabase">下一步</ProcedureButton>
+        <ProcedureButton @click="postDataBase">下一步</ProcedureButton>
       </router-link>
     </div>
   </div>
@@ -87,8 +93,9 @@
 import Dropdown from "../components/Dropdown.vue";
 import Stepper from "../components/Stepper.vue";
 import ProcedureButton from "../components/ProcedureButton.vue";
-import { Moment } from "moment";
-import { mapState } from "vuex";
+import moment from "moment";
+// import { mapGetters, mapState } from "vuex";
+// import axios from "axios";
 
 export default {
   name: "Info",
@@ -100,51 +107,49 @@ export default {
   data() {
     return {
       workTypeList: ["廠工", "建築工", "看護", "漁工"],
-      workPatternList: ["週休二日", "非週休二日"],
+      workPatternList: ["輪班", "分輪班"],
       minimumWage: "25250",
       currentStep: 1,
       placeholderDate: new Date().toISOString().split("T")[0],
-      currentUserData: {},
-      companyIndex: 0,
+      name: "",
+      currentData: {
+        workType: "廠工",
+      },
+      editingCompanies: [],
+      currentIndex: 0,
+      workType: "",
+      wage: "30000",
+      workPattern: "輪班",
+      firstDayOfWork: moment,
+      lastDayOfWork: moment,
     };
   },
   created() {
-    this.getVuexData();
+    this.editingCompanies = this.currentUserInfoData;
   },
 
   methods: {
-    getVuexData() {
-      this.currentUserData = this.$store.state.allUserInfo[this.companyIndex];
-    },
-
-    switchTab(index) {
-      //改變index
-      this.companyIndex = index;
-      //tab切換把basic_info資料更換
-      this.currentUserData = this.$store.state.allUserInfo[this.companyIndex];
-    },
     updateCompanyName(e) {
+      this.editingCompanies[this.currentIndex].companyName = e.target.value;
       this.$store.commit("updateCompanyName", {
-        value: e.target.value || ` 公司${this.companyIndex + 1}`,
-        index: this.companyIndex,
+        value: e.target.value || ` 公司${this.currentIndex + 1}`,
+        index: this.currentIndex,
       });
     },
-    selectWorkType(value) {
-      this.currentUserData.workType = value;
-    },
-    selectWorkPattern(value) {
-      this.currentUserData.workPattern = value;
+    postDataBase() {
+      this.$store.commit("updateUserInfoData", this.editingCompanies);
+      // this.$store.dispatch("postDataBase", this.editingCompanies);
     },
   },
   computed: {
-    collectionUserCompany() {
-      return this.$store.getters.collectionUserCompany;
-    },
-    ...mapState({
-      companyName: function (state) {
-        return state.allUserInfo[this.companyIndex].companyName;
+    collectionUserCompany: {
+      get() {
+        return this.$store.getters.collectionUserCompany;
       },
-    }),
+    },
+    currentUserInfoData() {
+      return this.$store.getters.currentUserInfoData;
+    },
   },
 };
 </script>

@@ -3,13 +3,23 @@
     <div class="img-frame">
       <img src="../assets/images/star.png" alt="star icon" />
     </div>
-    <p v-if="selectedType">{{ selectedType }}</p>
+    <p v-if="TypeValue">{{ TypeValue }}</p>
     <p v-else><slot></slot></p>
     <button class="triangle" @click="toggleDropdown"></button>
   </div>
 
   <ul :class="['dropdown-menu', { unfolded: unfolded }]">
-    <li v-for="(option, index) in optionList" :key="index" :option="option" @click="selectWorkType(option)">
+    <li
+      v-for="(option, index) in optionList"
+      :key="index"
+      :option="option"
+      @click="
+        () => {
+          $emit('update:TypeValue', option);
+          this.toggleDropdown();
+        }
+      "
+    >
       {{ option }}
     </li>
   </ul>
@@ -19,31 +29,30 @@
 import CalendarDateIndicatorVue from "./CalendarDateIndicator.vue";
 export default {
   name: "Dropdown",
-  emits: ["selectTypeValue"],
   props: {
     optionList: {
       type: Array,
     },
-    selectedType: {
+    workPatternList: Array,
+    TypeValue: {
       type: String,
     },
+    // value: Array,
+    // modelModifiers: {
+    //   default: () => [],
+    // },
   },
+  emits: ["update:TypeValue"],
   data() {
     return {
       unfolded: false,
     };
   },
-  created() {},
   methods: {
     toggleDropdown() {
       this.unfolded = !this.unfolded;
     },
-    selectWorkType(workType) {
-      this.$emit("selectTypeValue", workType);
-      this.toggleDropdown();
-    },
   },
-  watch: {},
 };
 </script>
 

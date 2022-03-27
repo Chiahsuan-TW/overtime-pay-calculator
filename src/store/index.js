@@ -1,55 +1,12 @@
 import { createStore } from "vuex";
-import APIService from "@/services/Api";
+// import APIService from "@/services/Api";
 import { Moment } from "moment";
-
+import axios from "axios";
+import api from "@/services/Api";
 export default createStore({
   state: {
-    allUserInfo: [
-      {
-        userID: "wendy@gmail.com.tw",
-        companyID: "company1",
-        companyName: "apple",
-        identify: "TC100200300",
-        workType: "看護",
-        workPattern: "週休二日",
-        wage: "50010",
-        firstDayOfWork: Moment,
-        lastDayOfWork: Moment,
-      },
-      {
-        userID: "wendy@gmail.com.tw",
-        companyID: "company2",
-        companyName: "facebook",
-        identify: "TC100200300",
-        workType: "漁工",
-        workPattern: "週休二日",
-        wage: "100000",
-        firstDayOfWork: Moment,
-        lastDayOfWork: Moment,
-      },
-      {
-        userID: "wendy@gmail.com.tw",
-        companyID: "company3",
-        companyName: "gogogro",
-        identify: "TC100200300",
-        workType: "廠工",
-        workPattern: "非週休二日",
-        wage: "100000",
-        firstDayOfWork: Moment,
-        lastDayOfWork: Moment,
-      },
-      {
-        userID: "wendy@gmail.com.tw",
-        companyID: "company4",
-        companyName: "TSMC",
-        identify: "TC100200300",
-        workType: "看護",
-        workPattern: "非週休二日",
-        wage: "1000",
-        firstDayOfWork: Moment,
-        lastDayOfWork: Moment,
-      },
-    ],
+    mail: "ajay@gmail.com.tw",
+    dataBaseData: [],
     data: [
       {
         userID: "wendy@gmail.com.tw",
@@ -114,27 +71,65 @@ export default createStore({
     ],
   },
   mutations: {
-    saveRecordingData(state, userInput) {
-      state.data.push(userInput);
-    },
-    saveUserInfo(state, input) {
-      state.allUserInfo = input;
-    },
     updateCompanyName(state, data) {
       const { value, index } = data;
-      state.allUserInfo[index].companyName = value;
+      state.dataBaseData[index].companyName = value;
+    },
+    getData(state, response) {
+      state.dataBaseData = response;
+    },
+    updateUserInfoData(state, newValue) {
+      state.dataBaseData = newValue;
+      console.log("vuex更新過", state.dataBaseData);
     },
   },
   actions: {
-    saveToDatabase(state, data) {
-      console.log("dispath", state.basic_info, data);
-      APIService.post(data);
+    async getDataBase({ state, commit }) {
+      const allUserData = await api.getDataBase();
+      commit(
+        "getData",
+        allUserData.filter((data) => data.userID === state.mail)
+      );
+    },
+    postDataBase({ state, commit }, editingCompanies) {
+      // store in vuex and post data to google sheet
+      // console.log(editingCompanies);
+      // commit("updateUserInfoData", editingCompanies);
+      // const formdata = new FormData();
+      // const userData = state.allUserInfo[1];
+      // for (const key in userData) {
+      //   formdata.append(key, userData[key]);
+      // }
+      // const config = {
+      //   method: "post",
+      //   url: "https://script.google.com/macros/s/AKfycbzIEThR60wFbKhk6Re0ClPk1kfQX_MelHiJG-0ncHjUSzyggviznfd3zyHfJgJEojGlCQ/exec",
+      //   data: formdata,
+      // };
+      // axios(config)
+      //   .then(function (response) {
+      //     console.log(JSON.stringify(response.data));
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //   });
     },
   },
-  modules: {},
+  modules: {
+    //把data裝到這裡
+  },
   getters: {
-    collectionUserCompany(state) {
-      return state.allUserInfo.map((userInfo) => userInfo.companyName);
+    currentUserInfoData(state) {
+      const result = state.dataBaseData;
+      return result;
+    },
+
+    collectionUserCompany(state, getters) {
+      return getters.currentUserInfoData.map(function (data, index) {
+        if (!data.companyName) {
+          return `公司${index + 1}`;
+        }
+        return data.companyName;
+      });
     },
   },
 });
