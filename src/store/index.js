@@ -1,11 +1,11 @@
 import { createStore } from "vuex";
 // import APIService from "@/services/Api";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import axios from "axios";
 import api from "@/services/Api";
 export default createStore({
   state: {
-    mail: "ajay@gmail.com.tw",
+    mail: "wendy@gmail.com.tw",
     dataBaseData: [],
     data: [
       {
@@ -91,27 +91,49 @@ export default createStore({
         allUserData.filter((data) => data.userID === state.mail)
       );
     },
-    postDataBase({ state, commit }, editingCompanies) {
-      // store in vuex and post data to google sheet
-      // console.log(editingCompanies);
-      // commit("updateUserInfoData", editingCompanies);
-      // const formdata = new FormData();
-      // const userData = state.allUserInfo[1];
-      // for (const key in userData) {
-      //   formdata.append(key, userData[key]);
-      // }
-      // const config = {
-      //   method: "post",
-      //   url: "https://script.google.com/macros/s/AKfycbzIEThR60wFbKhk6Re0ClPk1kfQX_MelHiJG-0ncHjUSzyggviznfd3zyHfJgJEojGlCQ/exec",
-      //   data: formdata,
-      // };
-      // axios(config)
-      //   .then(function (response) {
-      //     console.log(JSON.stringify(response.data));
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error);
-      //   });
+    // postDataBase({ state, commit }, editingCompanies) {
+    //   const userData = state.dataBaseData[0];
+    //   var myHeaders = new Headers();
+    //   myHeaders.append("Cookie", "__Host-GAPS=1:eyUw4aI4SNl_B8ngss48IsVc3JjPoA:m0HB6tmTEkfyddFX");
+    //   var formData = new FormData();
+    //   for (const key in userData) {
+    //     formData.append(key, userData[key]);
+    //   }
+    //   var requestOptions = {
+    //     method: "POST",
+    //     headers: myHeaders,
+    //     body: formData,
+    //     redirect: "follow",
+    //   };
+
+    //   fetch(
+    //     "https://script.google.com/macros/s/AKfycbxydCYdA6d_pfeFFgzyR723yeVAlDT1BavyFSXdVjYVup-Nsb80ohRfvcG21Od1Pr1CQg/exec",
+    //     requestOptions
+    //   )
+    //     .then((response) => response.text())
+    //     .then((result) => console.log(result))
+    //     .catch((error) => console.log("error", error));
+    // },
+    postDataBase({ state }, itemOfArray) {
+      const formData = new FormData();
+      for (const key in itemOfArray) {
+        formData.append(key, itemOfArray[key]);
+      }
+      const config = {
+        url: "https://script.google.com/macros/s/AKfycbxydCYdA6d_pfeFFgzyR723yeVAlDT1BavyFSXdVjYVup-Nsb80ohRfvcG21Od1Pr1CQg/exec",
+        method: "post",
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        data: formData,
+      };
+      return axios(config);
+      // .then(function (response) {
+      //   console.log(JSON.stringify(response.data));
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });
     },
   },
   modules: {
@@ -120,6 +142,10 @@ export default createStore({
   getters: {
     currentUserInfoData(state) {
       const result = state.dataBaseData;
+      result.forEach((item) => {
+        item.firstDayOfWork = item.firstDayOfWork ? moment(item.firstDayOfWork) : moment();
+        item.lastDayOfWork = item.lastDayOfWork ? moment(item.lastDayOfWork) : moment();
+      });
       return result;
     },
 

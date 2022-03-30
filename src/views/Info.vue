@@ -44,7 +44,12 @@
           <div class="img-frame">
             <img src="../assets/images/star.png" alt="star icon" />
           </div>
-          <input id="salary" type="number" :placeholder="`薪資: ${minimumWage}`" v-model="wage" />
+          <input
+            id="salary"
+            type="number"
+            :placeholder="`薪資: ${minimumWage}`"
+            v-model="editingCompanies[currentIndex].wage"
+          />
           <label for="salary" class="pen" @click="toggleDropdown">
             <img src="../assets/images/pen.png" alt="pen" />
           </label>
@@ -59,7 +64,7 @@
         </div>
         <a-date-picker
           :allowClear="false"
-          v-model="firstDayOfWork"
+          v-model:value="editingCompanies[currentIndex].firstDayOfWork"
           dropdownClassName="custom-calendar"
           class="custom-datepicker"
           :placeholder="placeholderDate"
@@ -75,7 +80,7 @@
         </div>
         <a-date-picker
           :allowClear="false"
-          v-model="lastDayOfWork"
+          v-model:value="editingCompanies[currentIndex].lastDayOfWork"
           dropdownClassName="custom-calendar"
           class="custom-datepicker"
           :placeholder="placeholderDate"
@@ -107,21 +112,12 @@ export default {
   data() {
     return {
       workTypeList: ["廠工", "建築工", "看護", "漁工"],
-      workPatternList: ["輪班", "分輪班"],
+      workPatternList: ["輪班", "非輪班"],
       minimumWage: "25250",
       currentStep: 1,
-      placeholderDate: new Date().toISOString().split("T")[0],
-      name: "",
-      currentData: {
-        workType: "廠工",
-      },
-      editingCompanies: [],
       currentIndex: 0,
-      workType: "",
-      wage: "30000",
-      workPattern: "輪班",
-      firstDayOfWork: moment,
-      lastDayOfWork: moment,
+      placeholderDate: new Date().toISOString().split("T")[0],
+      editingCompanies: [],
     };
   },
   created() {
@@ -136,9 +132,20 @@ export default {
         index: this.currentIndex,
       });
     },
-    postDataBase() {
-      this.$store.commit("updateUserInfoData", this.editingCompanies);
-      // this.$store.dispatch("postDataBase", this.editingCompanies);
+    async postDataBase() {
+      //日期轉乘字串
+      const formattedData = this.editingCompanies.map((item) => {
+        item.firstDayOfWork = item.firstDayOfWork.format("YYYY-MM-DD");
+        item.lastDayOfWork = item.lastDayOfWork.format("YYYY-MM-DD");
+        return item;
+      });
+      this.$store.commit("updateUserInfoData", formattedData);
+      const result = await Promise.all(
+        formattedData.map(async (item) => {
+          await this.$store.dispatch("postDataBase", item);
+          return item;
+        })
+      );
     },
   },
   computed: {
