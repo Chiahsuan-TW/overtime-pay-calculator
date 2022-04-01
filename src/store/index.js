@@ -114,26 +114,20 @@ export default createStore({
     //     .then((result) => console.log(result))
     //     .catch((error) => console.log("error", error));
     // },
-    postDataBase({ state }, itemOfArray) {
-      const formData = new FormData();
-      for (const key in itemOfArray) {
-        formData.append(key, itemOfArray[key]);
-      }
-      const config = {
-        url: "https://script.google.com/macros/s/AKfycbxydCYdA6d_pfeFFgzyR723yeVAlDT1BavyFSXdVjYVup-Nsb80ohRfvcG21Od1Pr1CQg/exec",
+    postDataBase(context, postData) {
+      let { params, data } = { ...postData };
+      console.log(params, data);
+      axios({
         method: "post",
-        headers: {
-          "content-type": "multipart/form-data",
+        url: "https://script.google.com/macros/s/AKfycbyxy0mg8Oaf12jtZzQVKHZjphjG2AOzOOVYOUfzQtrhMqJEVOnhqzLGV6dx0YR3JRU3fA/exec",
+        headers: { "content-type": "text/plain;charset=utf-8" },
+        data: data,
+        params: {
+          companyID: `company${params + 1}`,
         },
-        data: formData,
-      };
-      return axios(config);
-      // .then(function (response) {
-      //   console.log(JSON.stringify(response.data));
-      // })
-      // .catch(function (error) {
-      //   console.log(error);
-      // });
+      }).then(function (response) {
+        console.log("收到", response.data);
+      });
     },
   },
   modules: {

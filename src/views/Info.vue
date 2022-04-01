@@ -13,21 +13,13 @@
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
       <div class="modal-content-item companyName">
-        <pre>
+        <!-- <pre>
           {{ editingCompanies[currentIndex] }}
-        </pre>
+        </pre> -->
 
         <span>公司名稱:</span>
         <input type="text" :value="editingCompanies[currentIndex].companyName" @input="updateCompanyName" />
-
-        <!-- <input type="text" :value="companyName" @input="updateCompanyName" maxlength="12" /> -->
       </div>
-      <!-- <p>{{ currentUserInfoData }}</p> -->
-      <!-- <div class="modal-content-item"> -->
-      <!-- <Dropdown :optionList="workTypeList" @selectTypeValue="selectWorkType" :selectedType="userInfo.workType"
-          >工作類型</Dropdown
-        > -->
-      <!-- </div> -->
       <div class="modal-content-item">
         <Dropdown :optionList="workTypeList" v-model:TypeValue="editingCompanies[currentIndex].workType"
           >工作類型</Dropdown
@@ -134,18 +126,18 @@ export default {
     },
     async postDataBase() {
       //日期轉乘字串
-      const formattedData = this.editingCompanies.map((item) => {
-        item.firstDayOfWork = item.firstDayOfWork.format("YYYY-MM-DD");
-        item.lastDayOfWork = item.lastDayOfWork.format("YYYY-MM-DD");
-        return item;
+      const formattedData = this.editingCompanies.map((item, index) => {
+        return {
+          ...item,
+          firstDayOfWork: item.firstDayOfWork.format("YYYY-MM-DD"),
+          lastDayOfWork: item.lastDayOfWork.format("YYYY-MM-DD"),
+        };
       });
       this.$store.commit("updateUserInfoData", formattedData);
-      const result = await Promise.all(
-        formattedData.map(async (item) => {
-          await this.$store.dispatch("postDataBase", item);
-          return item;
-        })
-      );
+      await this.$store.dispatch("postDataBase", {
+        params: this.currentIndex,
+        data: JSON.stringify(formattedData),
+      });
     },
   },
   computed: {

@@ -18,6 +18,7 @@ const routes = [
     component: () => import("@/views/Layout.vue"),
     redirect: "/Info",
     children: [
+      // 發api時間點修改
       {
         path: "/Info",
         name: "Info",
