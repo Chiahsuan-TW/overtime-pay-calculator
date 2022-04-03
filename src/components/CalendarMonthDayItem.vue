@@ -40,6 +40,9 @@ export default {
       type: Boolean,
       default: false,
     },
+    currentDayData: {
+      type: Object,
+    },
   },
   data() {
     return {

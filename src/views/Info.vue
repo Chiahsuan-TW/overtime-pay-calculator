@@ -1,6 +1,7 @@
 <template>
   <h3>基本資料</h3>
   <div class="modal">
+    <pre> index:{{ currentIndex }}</pre>
     <nav>
       <a
         v-for="(company, index) in collectionUserCompany"
@@ -16,7 +17,6 @@
         <!-- <pre>
           {{ editingCompanies[currentIndex] }}
         </pre> -->
-
         <span>公司名稱:</span>
         <input type="text" :value="editingCompanies[currentIndex].companyName" @input="updateCompanyName" />
       </div>
@@ -30,7 +30,6 @@
           >工作型態</Dropdown
         >
       </div>
-
       <div class="modal-content-item">
         <div class="dropdown-title">
           <div class="img-frame">
@@ -101,13 +100,14 @@ export default {
     Dropdown,
     ProcedureButton,
   },
+
   data() {
     return {
       workTypeList: ["廠工", "建築工", "看護", "漁工"],
       workPatternList: ["輪班", "非輪班"],
       minimumWage: "25250",
       currentStep: 1,
-      currentIndex: 0,
+      // currentIndex: 0,
       placeholderDate: new Date().toISOString().split("T")[0],
       editingCompanies: [],
     };
@@ -148,6 +148,15 @@ export default {
     },
     currentUserInfoData() {
       return this.$store.getters.currentUserInfoData;
+    },
+
+    currentIndex: {
+      get() {
+        return this.$store.getters.currentIndex;
+      },
+      set(newIndex) {
+        return this.$store.commit("updateCurrentIndex", newIndex);
+      },
     },
   },
 };

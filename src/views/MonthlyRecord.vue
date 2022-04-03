@@ -1,6 +1,8 @@
 <template>
   <h3>工時及休假紀錄</h3>
   <div class="modal">
+    <pre>目前哪一個companyID:{{ currentCompanyID }}</pre>
+    <pre>{{ monthlyRecordData }}</pre>
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
       <div class="calendar-month">
@@ -76,6 +78,9 @@ export default {
     Stepper,
     ProcedureButton,
   },
+  mounted() {
+    this.$store.dispatch("recordingData/getMonthlyData");
+  },
   data() {
     return {
       selectedDate: dayjs(),
@@ -148,7 +153,14 @@ export default {
         };
       });
     },
+    monthlyRecordData() {
+      return this.$store.getters["recordingData/monthlyRecordData"];
+    },
+    currentCompanyID() {
+      return this.$store.getters["recordingData/currentCompanyID"];
+    },
   },
+
   // beforeRouteEnter(to, from) {
   //   console.log(to.params);
   // },

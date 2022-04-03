@@ -1,6 +1,8 @@
 <template>
   <div class="modal-background">
     <div class="modal">
+      <p>上班:{{ formattedOnDuty }}</p>
+      <p>下班{{ formattedOffDuty }}</p>
       <span class="close" @click="$emit('close')">&#x2715;</span>
       <div class="modal-content">
         <div class="modal-title">
@@ -16,6 +18,7 @@
             :default-value="onDuty"
             format="HH:mm"
             :disabled="isEnabled"
+            v-model:value="onDuty"
           />
         </div>
         <div class="off-duty">
@@ -27,6 +30,7 @@
             :default-value="offDuty"
             format="HH:mm"
             :disabled="isEnabled"
+            v-model:value="offDuty"
           />
         </div>
         <div class="day-off">
@@ -115,6 +119,12 @@ export default {
       const month = dateList[1];
       const day = dateList[2];
       return `${year} ${month}月${day}日`;
+    },
+    formattedOnDuty() {
+      return this.onDuty.format("HH:mm");
+    },
+    formattedOffDuty() {
+      return this.offDuty.format("HH:mm");
     },
   },
   watch: {
