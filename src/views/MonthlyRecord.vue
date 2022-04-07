@@ -2,7 +2,6 @@
   <h3>工時及休假紀錄</h3>
   <div class="modal">
     <pre>目前哪一個companyID:{{ currentCompanyID }}</pre>
-    <pre>{{ monthlyRecordData }}</pre>
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
       <div class="calendar-month">
@@ -18,7 +17,9 @@
               :day="day"
               :is-current-month="day.isCurrentMonth"
               :is-today="day.date === today"
-            />
+              :monthlyRecordData="monthlyRecordData"
+            >
+            </CalendarMonthDayItem>
           </tr>
         </table>
       </div>
@@ -158,6 +159,9 @@ export default {
     },
     currentCompanyID() {
       return this.$store.getters["recordingData/currentCompanyID"];
+    },
+    compareDate() {
+      return "wendy";
     },
   },
 

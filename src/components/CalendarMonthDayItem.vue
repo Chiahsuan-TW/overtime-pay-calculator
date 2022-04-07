@@ -1,10 +1,11 @@
 <template>
   <td
-    @click="toggleModal"
+    @click="toggleModal(label)"
     class="calendar-day"
     :class="{
       'calendar-day--not-current': !isCurrentMonth,
       'calendar-day--today': isToday,
+      isExistingData: Object.keys(currentDayData).length ? true : false,
     }"
   >
     <span>{{ label }}</span>
@@ -13,7 +14,7 @@
   <!-- <Teleport to="body">
     <CalendarModal v-if="isModalOpen" @close="toggleModal" />
   </Teleport> -->
-  <CalendarModal v-if="isModalOpen" @close="toggleModal" :day="day" />
+  <CalendarModal v-if="isModalOpen" @close="toggleModal" :day="day" :currentDayData="currentDayData" />
 </template>
 
 <script>
@@ -40,7 +41,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    currentDayData: {
+    days: {
+      type: Array,
+    },
+    monthlyRecordData: {
       type: Object,
     },
   },
@@ -51,6 +55,7 @@ export default {
   },
   methods: {
     toggleModal() {
+      console.log("label", this.day.date);
       if (this.isCurrentMonth) {
         this.isModalOpen = !this.isModalOpen;
       }
@@ -59,6 +64,10 @@ export default {
   computed: {
     label() {
       return dayjs(this.day.date).format("D");
+    },
+
+    currentDayData() {
+      return this.monthlyRecordData.find((item) => item.date === this.day.date) || {};
     },
   },
 };
@@ -92,5 +101,8 @@ export default {
 .overtime-indicator {
   color: color.$primary-dark;
   font-size: 12px;
+}
+.isExistingData {
+  background: #ffcd9b;
 }
 </style>

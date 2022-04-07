@@ -1,6 +1,7 @@
 <template>
   <div class="modal-background">
     <div class="modal">
+      <p>{{ currentDayData }}</p>
       <p>上班:{{ formattedOnDuty }}</p>
       <p>下班{{ formattedOffDuty }}</p>
       <span class="close" @click="$emit('close')">&#x2715;</span>
@@ -63,6 +64,10 @@ import ProcedureButton from "./ProcedureButton.vue";
 export default {
   props: {
     day: {
+      type: Object,
+      required: true,
+    },
+    currentDayData: {
       type: Object,
       required: true,
     },
