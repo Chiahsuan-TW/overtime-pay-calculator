@@ -33,7 +33,7 @@ const routes = [
         },
       },
       {
-        path: "/MonthlyRecord",
+        path: "/MonthlyRecord/",
         name: "MonthlyRecord",
         component: () => import("@/views/MonthlyRecord.vue"),
       },

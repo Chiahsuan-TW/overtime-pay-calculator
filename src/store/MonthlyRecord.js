@@ -13,14 +13,12 @@ const MonthlyRecord = {
     },
   },
   actions: {
-    getMonthlyData({ getters, commit, rootState }) {
-      console.log("userID", rootState.userID);
-      console.log("comapnyID", getters.currentCompanyID);
+    getMonthlyData({ commit, rootState }, currentPageComapnyID) {
       let config = {
         method: "get",
         url: "https://script.google.com/macros/s/AKfycbzH77ym7e9JnY1RCUfqkgTY2vzzr5cE_kf7ifMgreW27XfQ07u4xBdoqM1agqpqa3Wk/exec",
         params: {
-          companyID: getters.currentCompanyID, //全域
+          companyID: currentPageComapnyID,
           userID: rootState.userID, //全域
         },
       };
@@ -31,6 +29,19 @@ const MonthlyRecord = {
         .catch(function (error) {
           console.log(error);
         });
+    },
+    postMonthlyData({ getters, rootState }, currentDayInfo) {
+      const data = JSON.stringify(currentDayInfo);
+      axios({
+        method: "post",
+        url: "https://script.google.com/macros/s/AKfycbxRh3FTXmjl-PkZz9fmH5TOaCW5PtKGipEOiHgPRqKBWZTY05GfogF95MQAKsbw_kq0/exec",
+        header: { "content-type": "text/plain;charset=utf-8" },
+        data: data,
+        params: {
+          companyID: currentDayInfo.companyID,
+          userID: rootState.userID,
+        },
+      }).then((response) => console.log("postMonthlyDataResponse:", response.data));
     },
   },
   getters: {

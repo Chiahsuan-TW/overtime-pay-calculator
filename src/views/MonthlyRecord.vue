@@ -1,7 +1,9 @@
 <template>
   <h3>工時及休假紀錄</h3>
   <div class="modal">
-    <pre>目前哪一個companyID:{{ currentCompanyID }}</pre>
+    <pre>目前哪一個companyID:{{ $route.query.companyID }}</pre>
+    <!-- <p>$route.params</p> -->
+    <!-- <pre>{{ monthlyRecordData }}</pre> -->
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
       <div class="calendar-month">
@@ -80,7 +82,8 @@ export default {
     ProcedureButton,
   },
   mounted() {
-    this.$store.dispatch("recordingData/getMonthlyData");
+    let currentPageComapnyID = this.$route.query.companyID;
+    this.$store.dispatch("recordingData/getMonthlyData", currentPageComapnyID);
   },
   data() {
     return {
@@ -155,13 +158,11 @@ export default {
       });
     },
     monthlyRecordData() {
+      console.log(this.$store.getters["recordingData/monthlyRecordData"]);
       return this.$store.getters["recordingData/monthlyRecordData"];
     },
     currentCompanyID() {
       return this.$store.getters["recordingData/currentCompanyID"];
-    },
-    compareDate() {
-      return "wendy";
     },
   },
 

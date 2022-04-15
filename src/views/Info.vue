@@ -78,7 +78,14 @@
         >
         </a-date-picker>
       </div>
-      <router-link :to="{ name: 'MonthlyRecord' }">
+      <router-link
+        :to="{
+          name: 'MonthlyRecord',
+          query: {
+            companyID: $store.getters['recordingData/currentCompanyID'],
+          },
+        }"
+      >
         <ProcedureButton @click="postDataBase">下一步</ProcedureButton>
       </router-link>
     </div>

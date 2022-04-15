@@ -5,7 +5,7 @@
     :class="{
       'calendar-day--not-current': !isCurrentMonth,
       'calendar-day--today': isToday,
-      isExistingData: Object.keys(currentDayData).length ? true : false,
+      isExistingData: this.monthlyRecordData.find((item) => item.date === this.day.date) ? true : false,
     }"
   >
     <span>{{ label }}</span>
@@ -51,6 +51,7 @@ export default {
   data() {
     return {
       isModalOpen: false,
+      // isExistingData: this.monthlyRecordData.find((item) => item.date === this.day.date) ? true : false,
     };
   },
   methods: {
@@ -65,9 +66,21 @@ export default {
     label() {
       return dayjs(this.day.date).format("D");
     },
-
     currentDayData() {
-      return this.monthlyRecordData.find((item) => item.date === this.day.date) || {};
+      return (
+        this.monthlyRecordData.find((item) => item.date === this.day.date) || {
+          userID: this.$store.state.userID,
+          companyID: this.$route.query.companyID,
+          date: this.day.date,
+          onDuty: "",
+          offDuty: "",
+          isDayOff: "",
+          leaveType: "",
+          workingHours: "",
+          overtimeHours: "",
+          overtimePay: "",
+        }
+      );
     },
   },
 };
@@ -103,6 +116,6 @@ export default {
   font-size: 12px;
 }
 .isExistingData {
-  background: #ffcd9b;
+  background: #d8e7fd;
 }
 </style>

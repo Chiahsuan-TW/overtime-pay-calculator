@@ -11,7 +11,6 @@ export default createStore({
     currentIndex: 0,
   },
   modules: {
-    //有設定nameSpace
     recordingData: MonthlyRecord,
   },
   mutations: {
@@ -24,10 +23,8 @@ export default createStore({
     },
     updateUserInfoData(state, newValue) {
       state.dataBaseData = newValue;
-      console.log("vuex更新過", state.dataBaseData);
     },
     updateCurrentIndex(state, newIndex) {
-      console.log("有更新index:", newIndex);
       state.currentIndex = newIndex;
     },
   },
@@ -39,8 +36,7 @@ export default createStore({
         allUserData.filter((data) => data.userID === state.userID)
       );
     },
-    postDataBase(context, postData) {
-      //postUserInfoTosheet
+    async postDataBase(context, postData) {
       let { params, data } = { ...postData };
       console.log(params, data);
       axios({
@@ -52,9 +48,6 @@ export default createStore({
           companyID: `company${params + 1}`,
         },
       });
-      // .then(function (response) {
-      //   console.log("收到", response.data);
-      // });
     },
   },
   getters: {

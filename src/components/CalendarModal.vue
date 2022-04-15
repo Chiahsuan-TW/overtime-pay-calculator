@@ -1,9 +1,12 @@
 <template>
   <div class="modal-background">
     <div class="modal">
-      <p>{{ currentDayData }}</p>
-      <p>上班:{{ formattedOnDuty }}</p>
-      <p>下班{{ formattedOffDuty }}</p>
+      <!-- <pre>{{ currentDayData }}</pre> -->
+      <p>date:{{ monthlyData.date }}</p>
+      <p>onDuty:{{ monthlyData.onDuty }}</p>
+      <p>offDuty:{{ monthlyData.offDuty }}</p>
+      <p>isDayOff:{{ monthlyData.isDayOff }}</p>
+      <p>leaveType:{{ monthlyData.leaveType }}</p>
       <span class="close" @click="$emit('close')">&#x2715;</span>
       <div class="modal-content">
         <div class="modal-title">
@@ -16,10 +19,10 @@
             @change="getOnDutyTime"
             class="custom-timepicker"
             :allowClear="false"
-            :default-value="onDuty"
+            :default-value="monthlyData.onDuty"
             format="HH:mm"
-            :disabled="isEnabled"
-            v-model:value="onDuty"
+            :disabled="monthlyData.isDayOff"
+            v-model:value="monthlyData.onDuty"
           />
         </div>
         <div class="off-duty">
@@ -28,19 +31,24 @@
             @change="getOffDutyTime"
             class="custom-timepicker"
             :allowClear="false"
-            :default-value="offDuty"
+            :default-value="monthlyData.offDuty"
             format="HH:mm"
-            :disabled="isEnabled"
-            v-model:value="offDuty"
+            :disabled="monthlyData.isDayOff"
+            v-model:value="monthlyData.offDuty"
           />
         </div>
         <div class="day-off">
           <div>
-            <input type="checkbox" id="day-off" v-model="isEnabled" />
+            <input type="checkbox" id="day-off" v-model="monthlyData.isDayOff" />
             <label for="day-off">請假</label>
           </div>
           <div>
-            <select name="day-off" id="day-off-select" :disabled="!isEnabled" v-model="leaveType">
+            <select
+              name="day-off"
+              id="day-off-select"
+              :disabled="!monthlyData.isDayOff"
+              v-model="monthlyData.leaveType"
+            >
               <option value="">請選擇假別</option>
               <option value="personal leave">事假</option>
               <option value="annual leave">特休</option>
@@ -60,6 +68,7 @@
 <script>
 import moment from "moment";
 import ProcedureButton from "./ProcedureButton.vue";
+import axios from "axios";
 
 export default {
   props: {
@@ -72,12 +81,27 @@ export default {
       required: true,
     },
   },
+  created() {
+    let { userID, companyID, onDuty, offDuty, isDayOff, leaveType } = this.currentDayData;
+    this.monthlyData = {
+      ...this.monthlyData,
+      userID: userID,
+      companyID: companyID,
+      onDuty: moment(onDuty || "00:00", "HH:mm"),
+      offDuty: moment(offDuty || "17:00", "HH:mm"),
+      isDayOff: isDayOff === "true",
+      leaveType: leaveType,
+    };
+  },
   data() {
     return {
-      onDuty: moment("00:00", "HH:mm"),
-      offDuty: moment("17:00", "HH:mm"),
-      isEnabled: false,
-      leaveType: "",
+      monthlyData: {
+        date: this.day.date,
+        onDuty: moment("00:00", "HH:mm"),
+        offDuty: moment("17:00", "HH:mm"),
+        leaveType: "",
+        isDayOff: false,
+      },
     };
   },
   components: { ProcedureButton },
@@ -90,18 +114,13 @@ export default {
       this.offDuty = value;
     },
     clickConfirm() {
-      //  存入vuex
-      let data = {
-        date: this.day.date,
-        onDuty: this.onDuty.format("HH:mm"),
-        offDuty: this.offDuty.format("HH:mm"),
-        isDayOff: this.isEnabled,
-        leaveType: this.leaveType,
-      };
-      // console.log("目前資料", data);
-      this.$store.commit("saveRecordingData", data);
+      this.$store.dispatch("recordingData/postMonthlyData", {
+        ...this.monthlyData,
+        onDuty: this.monthlyData.onDuty.format("HH:mm"),
+        offDuty: this.monthlyData.offDuty.format("HH:mm"),
+      });
       this.$emit("close");
-      this.$store.dispatch("saveToDatabase", data);
+      this.$router.go(0);
     },
   },
   computed: {
@@ -125,20 +144,14 @@ export default {
       const day = dateList[2];
       return `${year} ${month}月${day}日`;
     },
-    formattedOnDuty() {
-      return this.onDuty.format("HH:mm");
-    },
-    formattedOffDuty() {
-      return this.offDuty.format("HH:mm");
-    },
   },
   watch: {
-    isEnabled: function () {
-      if (this.isEnabled) {
-        this.onDuty = moment("00:00", "HH:mm");
-        this.offDuty = moment("00:00", "HH:mm");
+    "monthlyData.isDayOff": function () {
+      if (this.monthlyData.isDayOff) {
+        this.monthlyData.onDuty = moment("00:00", "HH:mm");
+        this.monthlyData.offDuty = moment("00:00", "HH:mm");
       }
-      this.leaveType = "";
+      this.monthlyData.leaveType = "";
     },
   },
 };
