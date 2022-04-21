@@ -3,10 +3,10 @@
   <div class="modal">
     <pre>目前哪一個companyID:{{ $route.query.companyID }}</pre>
     <!-- <p>$route.params</p> -->
-    <!-- <pre>{{ monthlyRecordData }}</pre> -->
+    <pre>{{ monthlyRecordData }}</pre>
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
-      <div class="calendar-month">
+      <div class="calendar-month" v-if="isRouterAlive" ref="calendar-month">
         <div class="calendar-month-header">
           <CalendarDateIndicator :selected-date="selectedDate" @dateSelected="selectDate" />
         </div>
@@ -85,10 +85,12 @@ export default {
     let currentPageComapnyID = this.$route.query.companyID;
     this.$store.dispatch("recordingData/getMonthlyData", currentPageComapnyID);
   },
+
   data() {
     return {
       selectedDate: dayjs(),
       currentStep: 2,
+      isRouterAlive: true,
     };
   },
   props: ["userInput"],

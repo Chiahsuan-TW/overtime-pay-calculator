@@ -68,7 +68,6 @@
 <script>
 import moment from "moment";
 import ProcedureButton from "./ProcedureButton.vue";
-import axios from "axios";
 
 export default {
   props: {
@@ -113,14 +112,15 @@ export default {
     getOffDutyTime(value) {
       this.offDuty = value;
     },
-    clickConfirm() {
-      this.$store.dispatch("recordingData/postMonthlyData", {
+    async clickConfirm() {
+      await this.$store.dispatch("recordingData/postMonthlyData", {
         ...this.monthlyData,
         onDuty: this.monthlyData.onDuty.format("HH:mm"),
         offDuty: this.monthlyData.offDuty.format("HH:mm"),
       });
+      let currentPageComapnyID = this.$route.query.companyID;
+      await this.$store.dispatch("recordingData/getMonthlyData", currentPageComapnyID);
       this.$emit("close");
-      this.$router.go(0);
     },
   },
   computed: {
