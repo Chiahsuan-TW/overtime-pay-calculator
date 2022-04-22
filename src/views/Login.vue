@@ -4,25 +4,21 @@
       <div class="auth-form">
         <h1>被偷走的移工薪資</h1>
         <p>選擇登入方式</p>
-        <router-link :to="{ name: 'Layout' }">
-          <div class="logo">
-            <img src="../assets/images/google-logo.png" alt="google-logo" />
-          </div>
+        <!-- <router-link :to="{ name: 'Layout' }"> 改成router push-->
+        <LoginButton>
+          <template #logoImg><img src="@/assets/images/google-logo.png" alt="google-logo" /></template>
+          <template #logoName>Facebook</template>
+        </LoginButton>
+        <!-- </router-link> -->
+        <LoginButton>
+          <template #logoImg><img src="@/assets/images/facebook-logo.png" alt="facebook-logo" /></template>
+          <template #logoName>Google</template>
+        </LoginButton>
 
-          <p>Google</p>
-        </router-link>
-        <a
-          ><div class="logo">
-            <img src="../assets/images/facebook-logo.png" alt="google-logo" />
-          </div>
-          <p>Facebook</p></a
-        >
-        <a
-          ><div class="logo">
-            <img src="../assets/images/avatar.png" alt="guest -logo" />
-          </div>
-          <p>訪客登入</p></a
-        >
+        <LoginButton>
+          <template #logoImg><img src="@/assets/images/avatar.png" alt="guest-logo" /></template>
+          <template #logoName>訪客登入</template>
+        </LoginButton>
       </div>
     </section>
     <section>
@@ -32,20 +28,20 @@
     </section>
   </main>
 </template>
-<script></script>
+<script>
+import LoginButton from "../components/LoginButton.vue";
+export default {
+  name: "Login",
+  components: { LoginButton },
+};
+</script>
 <style scoped lang="scss">
-* {
-  // outline: 1px solid red;
-}
+// * {
+//   outline: 1px solid red;
+// }
 h1 {
   margin-bottom: 60px;
   @extend %home-title;
-  // @include breakpoint.tablet {
-  //   font-size: 45px;
-  // }
-  // @include breakpoint.desktop {
-  //   font-size: 60px;
-  // }
 }
 
 main {
@@ -56,65 +52,38 @@ main {
       flex: 0 1 50%;
     }
   }
-}
-main section:first-child {
-  padding-top: 10%;
-}
-main section:nth-child(2) {
-  display: flex;
-  background: color.$background;
-  .wrap_img {
-    align-self: flex-end;
-    flex-grow: 1;
+  section:first-child {
+    padding-top: 10%;
+  }
+  section:nth-child(2) {
+    display: flex;
+    background: color.$background;
+    .wrap_img {
+      align-self: flex-end;
+      flex-grow: 1;
+    }
   }
 }
 
-a {
-  display: block;
-  width: 200px;
-  background: color.$primary-dark;
-  color: #fff;
-  font-weight: 900;
-  padding: 17px;
-  display: flex;
-  gap: 11px;
-  margin-bottom: 24px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  &:hover {
-    background: color.$primary-light;
-  }
-  @include breakpoint.tablet {
-    width: 331px;
-  }
-  @extend %content-title;
-}
 img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  vertical-align: top;
 }
 .auth-form {
   width: fit-content;
   margin: 0 auto;
+  a {
+    display: block;
+    margin: 0 auto 24px auto;
+    width: fit-content;
+  }
   > p {
     color: color.$gray;
     font-weight: 900;
     margin-bottom: 60px;
     @extend %home-subtitle;
-    // font-size: 24px;
-    // @include breakpoint.desktop {
-    //   font-size: 32px;
-    // }
-  }
-}
-.logo {
-  width: 38px;
-  height: 38px;
-  img {
-    width: 100%;
   }
 }
 </style>
