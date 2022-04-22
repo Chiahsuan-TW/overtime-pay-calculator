@@ -14,6 +14,7 @@ export default createStore({
     recordingData: MonthlyRecord,
   },
   mutations: {
+    logInFacebook() {},
     updateCompanyName(state, data) {
       const { value, index } = data;
       state.dataBaseData[index].companyName = value;
@@ -26,6 +27,26 @@ export default createStore({
     },
     updateCurrentIndex(state, newIndex) {
       state.currentIndex = newIndex;
+    },
+    async initFacebook() {
+      if (window.FB === undefined) {
+        console.log("window.FB === undefined");
+        window.fbAsyncInit = function () {
+          initialize();
+        };
+      } else {
+        console.log("window.FB !== undefined");
+        initialize();
+      }
+      function initialize() {
+        window.FB.init({
+          appId: "1815043565359281",
+          xfbml: true,
+          cookie: true,
+          version: "v13.0",
+        });
+        console.log(window.FB);
+      }
     },
   },
   actions: {
@@ -49,8 +70,28 @@ export default createStore({
         },
       });
     },
+    async logInFacebook({ state, commit }) {
+      await commit("initFacebook");
+      window.FB.login(
+        (response) => {
+          if (response.authResponse) {
+            this.islogin = true;
+            window.FB.api("/me", "GET", { fields: "email" }, (response) => {
+              console.log("res", response, "email", response.email);
+              state.userID = response.email;
+            });
+          } else {
+            alert("Facebook帳號無法登入");
+          }
+        },
+        { scope: "public_profile,email" }
+      );
+    },
   },
   getters: {
+    userID(state) {
+      return state.userID;
+    },
     currentUserInfoData(state) {
       const result = state.dataBaseData;
       result.forEach((item) => {

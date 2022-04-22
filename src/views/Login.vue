@@ -3,16 +3,15 @@
     <section>
       <div class="auth-form">
         <h1>被偷走的移工薪資</h1>
+        <p>使用者{{ $store.state.userID }}</p>
         <p>選擇登入方式</p>
-        <!-- <router-link :to="{ name: 'Layout' }"> 改成router push-->
         <LoginButton>
           <template #logoImg><img src="@/assets/images/google-logo.png" alt="google-logo" /></template>
-          <template #logoName>Facebook</template>
-        </LoginButton>
-        <!-- </router-link> -->
-        <LoginButton>
-          <template #logoImg><img src="@/assets/images/facebook-logo.png" alt="facebook-logo" /></template>
           <template #logoName>Google</template>
+        </LoginButton>
+        <LoginButton @click="logInFacebook">
+          <template #logoImg><img src="@/assets/images/facebook-logo.png" alt="facebook-logo" /></template>
+          <template #logoName>FaceBook</template>
         </LoginButton>
 
         <LoginButton>
@@ -33,6 +32,14 @@ import LoginButton from "../components/LoginButton.vue";
 export default {
   name: "Login",
   components: { LoginButton },
+  data() {
+    return {};
+  },
+  methods: {
+    async logInFacebook() {
+      await this.$store.dispatch("logInFacebook");
+    },
+  },
 };
 </script>
 <style scoped lang="scss">
