@@ -1,7 +1,15 @@
 <template>
   <router-view />
 </template>
-
+<script>
+export default {
+  mounted() {
+    window.addEventListener("beforeunload", () => {
+      localStorage.removeItem("usrInfo");
+    });
+  },
+};
+</script>
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
