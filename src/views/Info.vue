@@ -1,8 +1,11 @@
 <template>
   <h3>基本資料</h3>
+  <!-- <button @click="close">點關閉</button> -->
   <div class="modal">
-    <pre> index:{{ currentIndex }}</pre>
-    <nav>
+    <nav class="loading" v-if="isLoading">
+      <a href="">loading</a>
+    </nav>
+    <nav v-else>
       <a
         v-for="(company, index) in collectionUserCompany"
         :key="index"
@@ -12,11 +15,10 @@
       >
     </nav>
     <Stepper :currentStep="currentStep" />
-    <div class="modal-content">
+    <div class="loading_content" v-if="isLoading"></div>
+    <div class="modal-content" v-else>
+      <p>{{ editingCompanies }}</p>
       <div class="modal-content-item companyName">
-        <!-- <pre>
-          {{ editingCompanies[currentIndex] }}
-        </pre> -->
         <span>公司名稱:</span>
         <input type="text" :value="editingCompanies[currentIndex].companyName" @input="updateCompanyName" />
       </div>
@@ -93,8 +95,8 @@
 </template>
 
 <script>
-import Dropdown from "../components/Dropdown.vue";
 import Stepper from "../components/Stepper.vue";
+import Dropdown from "../components/Dropdown.vue";
 import ProcedureButton from "../components/ProcedureButton.vue";
 import moment from "moment";
 // import { mapGetters, mapState } from "vuex";
@@ -114,13 +116,27 @@ export default {
       workPatternList: ["輪班", "非輪班"],
       minimumWage: "25250",
       currentStep: 1,
-      // currentIndex: 0,
       placeholderDate: new Date().toISOString().split("T")[0],
-      editingCompanies: [],
+      editingCompanies: [...Array(4)].map((x) => {
+        return {};
+      }),
+      isLoading: true,
     };
   },
-  created() {
-    this.editingCompanies = this.currentUserInfoData;
+  async created() {
+    // 非會員
+
+    // if (this.$store.state.userID !== "guest") {
+    // await this.$store.dispatch("getDataBase");
+    // this.editingCompanies = this.currentUserInfoData;
+    this.isLoading = false;
+    // return;
+    // }
+    // await this.$store.dispatch("getDataBase");
+    // this.editingCompanies = this.currentUserInfoData;
+    //訪客登入
+    //不發get api
+    // this.editingCompanies = this.currentUserInfoData;
   },
 
   methods: {
@@ -145,6 +161,9 @@ export default {
         params: this.currentIndex,
         data: JSON.stringify(formattedData),
       });
+    },
+    close() {
+      this.isLoading = !this.isLoading;
     },
   },
   computed: {
@@ -178,6 +197,7 @@ h3 {
   width: fit-content;
   margin: 0 auto;
 }
+
 .modal {
   max-width: 1000px;
   background-color: #fff;
@@ -307,5 +327,35 @@ a {
     border: 1px;
   }
   margin-bottom: 30px;
+}
+
+%loading {
+  opacity: 0.7;
+  width: 580px;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  animation: skeleton-loading 3s linear infinite reverse;
+}
+.modal {
+  .loading {
+    a {
+      @extend %loading;
+    }
+  }
+  .loading_content {
+    margin: 60px auto 0;
+    height: 400px;
+    @extend %loading;
+  }
+}
+@keyframes skeleton-loading {
+  0% {
+    background-position: -468px 0;
+    color: #cfc7c7;
+  }
+
+  100% {
+    background-position: 468px 0;
+    color: #4c4545;
+  }
 }
 </style>
