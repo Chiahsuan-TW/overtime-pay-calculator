@@ -2,6 +2,7 @@
   <h3>基本資料</h3>
   <!-- <button @click="close">點關閉</button> -->
   <div class="modal">
+    <p>是會員嗎{{ isLogIn }}</p>
     <nav class="loading" v-if="isLoading">
       <a href="">loading</a>
     </nav>
@@ -125,18 +126,16 @@ export default {
   },
   async created() {
     // 非會員
-
-    // if (this.$store.state.userID !== "guest") {
-    // await this.$store.dispatch("getDataBase");
-    // this.editingCompanies = this.currentUserInfoData;
+    if (!this.isLogIn) {
+      //不發API
+      this.isLoading = false;
+      this.editingCompanies = this.currentUserInfoData;
+      return;
+    }
+    //會員
+    await this.$store.dispatch("getDataBase");
     this.isLoading = false;
-    // return;
-    // }
-    // await this.$store.dispatch("getDataBase");
-    // this.editingCompanies = this.currentUserInfoData;
-    //訪客登入
-    //不發get api
-    // this.editingCompanies = this.currentUserInfoData;
+    this.editingCompanies = this.currentUserInfoData;
   },
 
   methods: {
@@ -156,6 +155,14 @@ export default {
           lastDayOfWork: item.lastDayOfWork.format("YYYY-MM-DD"),
         };
       });
+      if (!this.isLogIn) {
+        //存到local storage
+        let stringFormattedData = JSON.stringify(formattedData);
+        localStorage.setItem("usrInfo", stringFormattedData);
+        return;
+      }
+      //會員
+
       this.$store.commit("updateUserInfoData", formattedData);
       await this.$store.dispatch("postDataBase", {
         params: this.currentIndex,
@@ -167,6 +174,9 @@ export default {
     },
   },
   computed: {
+    isLogIn() {
+      return this.$store.getters.isLogIn;
+    },
     collectionUserCompany: {
       get() {
         return this.$store.getters.collectionUserCompany;
