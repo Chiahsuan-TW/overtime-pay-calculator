@@ -9,10 +9,14 @@ const MonthlyRecord = {
       state.recordData = getData;
     },
     addRecordData(state, currentData) {
-      // console.log("目前資料", currentData);
-      // console.log("data", state.recordData);
+      const findIndex = state.recordData.findIndex((element) => {
+        return element.date === currentData.date;
+      });
+      if (findIndex !== -1) {
+        state.recordData[findIndex] = currentData;
+        return;
+      }
       state.recordData.push(currentData);
-      // state.recordData = [...state.recordData, currentData];
     },
     clearPreviousData(state) {
       state.recordData = [];
