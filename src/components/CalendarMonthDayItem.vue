@@ -56,7 +56,6 @@ export default {
   },
   methods: {
     toggleModal() {
-      console.log("label", this.day.date);
       if (this.isCurrentMonth) {
         this.isModalOpen = !this.isModalOpen;
       }

@@ -4,7 +4,6 @@ import router from "./router";
 import store from "./store";
 import { DatePicker, TimePicker } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
-
 import "../src/assets/scss/custom/_custom-calendar.scss";
 import "../src/assets/scss/custom/_custom-timepicker.scss";
 import "@/assets/scss/_reset.scss";

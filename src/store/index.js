@@ -6,21 +6,66 @@ import api from "@/services/Api";
 import { MonthlyRecord } from "@/store/MonthlyRecord.js";
 export default createStore({
   state: {
+    islogIn: false,
     userID: "wendy@gmail.com.tw",
-    dataBaseData: [],
+    dataBaseData: [
+      {
+        companyID: "company1",
+        companyName: "",
+        firstDayOfWork: "",
+        lastDayOfWork: "",
+        identify: "",
+        userID: "wendy@gmail.com.tw",
+        wage: "",
+        workPattern: "非輪班",
+        workType: "",
+      },
+      {
+        companyID: "company2",
+        companyName: "",
+        firstDayOfWork: "",
+        lastDayOfWork: "",
+        identify: "",
+        userID: "wendy@gmail.com.tw",
+        wage: "",
+        workPattern: "非輪班",
+        workType: "",
+      },
+      {
+        companyID: "company3",
+        companyName: "",
+        firstDayOfWork: "",
+        lastDayOfWork: "",
+        identify: "",
+        userID: "wendy@gmail.com.tw",
+        wage: "",
+        workPattern: "非輪班",
+        workType: "",
+      },
+      {
+        companyID: "company4",
+        companyName: "",
+        firstDayOfWork: "",
+        lastDayOfWork: "",
+        identify: "",
+        userID: "wendy@gmail.com.tw",
+        wage: "",
+        workPattern: "非輪班",
+        workType: "",
+      },
+    ],
     currentIndex: 0,
   },
   modules: {
     recordingData: MonthlyRecord,
   },
   mutations: {
-    logInFacebook() {},
+    getData(state, response) {
+      state.dataBaseData = response;
+    },
     updateCompanyName(state, data) {
       const { value, index } = data;
       state.dataBaseData[index].companyName = value;
-    },
-    getData(state, response) {
-      state.dataBaseData = response;
     },
     updateUserInfoData(state, newValue) {
       state.dataBaseData = newValue;
@@ -28,34 +73,31 @@ export default createStore({
     updateCurrentIndex(state, newIndex) {
       state.currentIndex = newIndex;
     },
-    async initFacebook() {
-      if (window.FB === undefined) {
-        console.log("window.FB === undefined");
-        window.fbAsyncInit = function () {
-          initialize();
-        };
-      } else {
-        console.log("window.FB !== undefined");
-        initialize();
-      }
-      function initialize() {
-        window.FB.init({
-          appId: "1815043565359281",
-          xfbml: true,
-          cookie: true,
-          version: "v13.0",
-        });
-        console.log(window.FB);
-      }
-    },
+    // updataLoginStatus(state) {
+    //   state.islogIn = !state.islogIn;
+    //   // this.$router.push({ path: "/Info" });
+    // }, a83a9e04 0265bcd
   },
   actions: {
+    getLocalStorage({ state, commit }, getLocalItem) {
+      console.log("localStorage get data ", getLocalItem);
+      const localStorageData = localStorage.getItem(getLocalItem);
+      if (localStorageData) {
+        // console.log("action-localStorageData 有取得資料", localStorageData);
+        commit("getData", JSON.parse(localStorageData));
+        return;
+      }
+      console.log('action-localStorageData 沒有取得資料"');
+    },
     async getDataBase({ state, commit }) {
       const allUserData = await api.getDataBase();
-      commit(
-        "getData",
-        allUserData.filter((data) => data.userID === state.userID)
-      );
+      if (allUserData) {
+        commit(
+          "getData",
+          allUserData.filter((data) => data.userID === state.userID)
+        );
+        return;
+      }
     },
     async postDataBase(context, postData) {
       let { params, data } = { ...postData };
@@ -70,37 +112,65 @@ export default createStore({
         },
       });
     },
-    async logInFacebook({ state, commit }) {
-      await commit("initFacebook");
-      window.FB.login(
-        (response) => {
-          if (response.authResponse) {
-            this.islogin = true;
-            window.FB.api("/me", "GET", { fields: "email" }, (response) => {
-              console.log("res", response, "email", response.email);
-              state.userID = response.email;
-            });
-          } else {
-            alert("Facebook帳號無法登入");
-          }
-        },
-        { scope: "public_profile,email" }
-      );
-    },
+    // async logInFacebook({ state, commit, dispatch }) {
+    //   await dispatch("initFacebook");
+    //   await window.FB.login(
+    //     async (response) => {
+    //       if (response.authResponse) {
+    //         const res = await window.FB.api("/me", "GET", { fields: "email" }, (response) => {
+    //           console.log("vuex 86 res", response, "email", response.email);
+    //           state.userID = response.email;
+    //           console.log("vuex 88", response.email);
+    //           // commit("updataLoginStatus"); //89
+    //         });
+    //         console.log("vuex 91", res);
+    //       } else {
+    //         alert("Facebook帳號無法登入");
+    //       }
+    //     },
+    //     { scope: "public_profile,email" }
+    //   );
+    //   commit("updataLoginStatus");
+    // },
+    // async initFacebook() {
+    //   if (window.FB === undefined) {
+    //     console.log("window.FB === undefined");
+    //     window.fbAsyncInit = function () {
+    //       initialize();
+    //     };
+    //   } else {
+    //     console.log("window.FB !== undefined");
+    //     initialize();
+    //   }
+    //   function initialize() {
+    //     window.FB.init({
+    //       appId: "1815043565359281",
+    //       xfbml: true,
+    //       cookie: true,
+    //       version: "v13.0",
+    //     });
+    //   }
+    // },
   },
   getters: {
-    userID(state) {
-      return state.userID;
+    isLogIn(state) {
+      if (state.userID === "wendy@gmail.com.tw") {
+        return false;
+      } else {
+        return true;
+      }
     },
     currentUserInfoData(state) {
       const result = state.dataBaseData;
-      result.forEach((item) => {
+      return result.map((item) => {
         item.firstDayOfWork = item.firstDayOfWork ? moment(item.firstDayOfWork) : moment();
         item.lastDayOfWork = item.lastDayOfWork ? moment(item.lastDayOfWork) : moment();
+        return item;
       });
-      return result;
     },
-
+    currentIndex(state) {
+      return state.currentIndex;
+    },
     collectionUserCompany(state, getters) {
       return getters.currentUserInfoData.map(function (data, index) {
         if (!data.companyName) {
@@ -108,9 +178,6 @@ export default createStore({
         }
         return data.companyName;
       });
-    },
-    currentIndex(state) {
-      return state.currentIndex;
     },
   },
 });

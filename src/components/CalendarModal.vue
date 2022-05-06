@@ -1,12 +1,7 @@
 <template>
   <div class="modal-background">
     <div class="modal">
-      <!-- <pre>{{ currentDayData }}</pre> -->
-      <p>date:{{ monthlyData.date }}</p>
-      <p>onDuty:{{ monthlyData.onDuty }}</p>
-      <p>offDuty:{{ monthlyData.offDuty }}</p>
-      <p>isDayOff:{{ monthlyData.isDayOff }}</p>
-      <p>leaveType:{{ monthlyData.leaveType }}</p>
+      <pre>{{ isLogIn }}</pre>
       <span class="close" @click="$emit('close')">&#x2715;</span>
       <div class="modal-content">
         <div class="modal-title">
@@ -113,17 +108,30 @@ export default {
       this.offDuty = value;
     },
     async clickConfirm() {
-      await this.$store.dispatch("recordingData/postMonthlyData", {
+      const currentPageComapnyID = this.$route.query.companyID;
+      const currentModalData = {
         ...this.monthlyData,
         onDuty: this.monthlyData.onDuty.format("HH:mm"),
         offDuty: this.monthlyData.offDuty.format("HH:mm"),
-      });
-      let currentPageComapnyID = this.$route.query.companyID;
-      await this.$store.dispatch("recordingData/getMonthlyData", currentPageComapnyID);
+      };
+      if (this.isLogIn) {
+        await this.$store.dispatch("recordingData/postMonthlyData", currentModalData);
+        await this.$store.dispatch("recordingData/getMonthlyData", currentPageComapnyID);
+        return;
+      } else {
+        //新增資料
+        //存localStoreage
+        this.$store.commit("recordingData/addRecordData", currentModalData);
+        this.$store.dispatch("recordingData/saveLocalStorageMonthlyData", this.currentCompanyID);
+      }
+
       this.$emit("close");
     },
   },
   computed: {
+    isLogIn() {
+      return this.$store.getters.isLogIn;
+    },
     weekday() {
       const index = this.day.weekday;
       const dayList = {
@@ -143,6 +151,9 @@ export default {
       const month = dateList[1];
       const day = dateList[2];
       return `${year} ${month}月${day}日`;
+    },
+    currentCompanyID() {
+      return this.$store.getters["recordingData/currentCompanyID"];
     },
   },
   watch: {

@@ -5,11 +5,17 @@ const MonthlyRecord = {
     recordData: [],
   }),
   mutations: {
-    clickButton(state) {
-      console.log(state.data);
-    },
     getMonthlyData(state, getData) {
       state.recordData = getData;
+    },
+    addRecordData(state, currentData) {
+      // console.log("目前資料", currentData);
+      // console.log("data", state.recordData);
+      state.recordData.push(currentData);
+      // state.recordData = [...state.recordData, currentData];
+    },
+    clearPreviousData(state) {
+      state.recordData = [];
     },
   },
   actions: {
@@ -31,6 +37,17 @@ const MonthlyRecord = {
           console.log(error);
         });
     },
+    getLocalStorageMonthlyData({ commit }, localItemKey) {
+      const localStorageData = localStorage.getItem(localItemKey);
+      const stringLocalStorageData = JSON.parse(localStorageData);
+      if (localStorageData) {
+        console.log("action-getLocalStorageMonthlyData 有取到資料");
+        commit("getMonthlyData", stringLocalStorageData);
+        return;
+      } else {
+        commit("clearPreviousData");
+      }
+    },
     postMonthlyData({ getters, rootState }, currentDayInfo) {
       const data = JSON.stringify(currentDayInfo);
       axios({
@@ -46,9 +63,16 @@ const MonthlyRecord = {
         .then((response) => console.log("postMonthlyDataResponse:", response.data))
         .catch(() => console.log("error"));
     },
+    saveLocalStorageMonthlyData({ state }, currentPageComapnyID) {
+      localStorage.setItem(currentPageComapnyID, JSON.stringify(state.recordData));
+    },
   },
   getters: {
-    monthlyRecordData(state) {
+    monthlyRecordData(state, getters, rootState, rootGetters) {
+      //登入
+      if (rootGetters.isLogIn) {
+        return state.recordData;
+      }
       return state.recordData;
     },
     currentCompanyID(state, getters, rootState) {

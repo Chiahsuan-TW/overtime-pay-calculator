@@ -1,8 +1,9 @@
 <template>
   <h3>基本資料</h3>
-  <!-- <button @click="close">點關閉</button> -->
   <div class="modal">
     <p>是會員嗎{{ isLogIn }}</p>
+    <p>使用者{{ $store.state.userID }}</p>
+    <h2>目前資料</h2>
     <nav class="loading" v-if="isLoading">
       <a href="">loading</a>
     </nav>
@@ -81,6 +82,7 @@
         >
         </a-date-picker>
       </div>
+
       <router-link
         :to="{
           name: 'MonthlyRecord',
@@ -100,8 +102,6 @@ import Stepper from "../components/Stepper.vue";
 import Dropdown from "../components/Dropdown.vue";
 import ProcedureButton from "../components/ProcedureButton.vue";
 import moment from "moment";
-// import { mapGetters, mapState } from "vuex";
-// import axios from "axios";
 
 export default {
   name: "Info",
@@ -118,27 +118,39 @@ export default {
       minimumWage: "25250",
       currentStep: 1,
       placeholderDate: new Date().toISOString().split("T")[0],
-      editingCompanies: [...Array(4)].map((x) => {
-        return {};
-      }),
+      editingCompanies: [],
       isLoading: true,
     };
   },
   async created() {
+    //確認是否是會員
     // 非會員
     if (!this.isLogIn) {
-      //不發API
-      this.isLoading = false;
+      this.$store.dispatch("getLocalStorage", "userInfo");
       this.editingCompanies = this.currentUserInfoData;
+      this.isLoading = false;
       return;
     }
     //會員
+    console.log("Info");
     await this.$store.dispatch("getDataBase");
     this.isLoading = false;
     this.editingCompanies = this.currentUserInfoData;
   },
-
   methods: {
+    saveLocalStorage(stringData) {
+      localStorage.setItem("userInfo", stringData);
+    },
+    formattedData() {
+      const formattedData = this.editingCompanies.map((item) => {
+        return {
+          ...item,
+          firstDayOfWork: item.firstDayOfWork.format("YYYY-MM-DD"),
+          lastDayOfWork: item.lastDayOfWork.format("YYYY-MM-DD"),
+        };
+      });
+      return formattedData;
+    },
     updateCompanyName(e) {
       this.editingCompanies[this.currentIndex].companyName = e.target.value;
       this.$store.commit("updateCompanyName", {
@@ -147,45 +159,31 @@ export default {
       });
     },
     async postDataBase() {
-      //日期轉乘字串
-      const formattedData = this.editingCompanies.map((item, index) => {
-        return {
-          ...item,
-          firstDayOfWork: item.firstDayOfWork.format("YYYY-MM-DD"),
-          lastDayOfWork: item.lastDayOfWork.format("YYYY-MM-DD"),
-        };
-      });
+      const formattedData = this.formattedData();
+      const stringFormattedData = JSON.stringify(formattedData);
       if (!this.isLogIn) {
-        //存到local storage
-        let stringFormattedData = JSON.stringify(formattedData);
-        localStorage.setItem("usrInfo", stringFormattedData);
+        this.saveLocalStorage(stringFormattedData);
         return;
       }
-      //會員
-
       this.$store.commit("updateUserInfoData", formattedData);
       await this.$store.dispatch("postDataBase", {
         params: this.currentIndex,
         data: JSON.stringify(formattedData),
       });
     },
-    close() {
-      this.isLoading = !this.isLoading;
-    },
   },
   computed: {
     isLogIn() {
       return this.$store.getters.isLogIn;
+    },
+    currentUserInfoData() {
+      return this.$store.getters.currentUserInfoData;
     },
     collectionUserCompany: {
       get() {
         return this.$store.getters.collectionUserCompany;
       },
     },
-    currentUserInfoData() {
-      return this.$store.getters.currentUserInfoData;
-    },
-
     currentIndex: {
       get() {
         return this.$store.getters.currentIndex;

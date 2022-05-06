@@ -5,16 +5,18 @@
         <h1>被偷走的移工薪資</h1>
         <p>使用者{{ $store.state.userID }}</p>
         <p>選擇登入方式</p>
-        <LoginButton>
+        isLogin:{{ $store.getters.isLogIn }}
+        <!-- <router-link :to="{ name: 'Info' }"> -->
+        <LoginButton @click="logInGoogle">
           <template #logoImg><img src="@/assets/images/google-logo.png" alt="google-logo" /></template>
           <template #logoName>Google</template>
         </LoginButton>
+        <!-- </router-link> -->
         <LoginButton @click="logInFacebook">
           <template #logoImg><img src="@/assets/images/facebook-logo.png" alt="facebook-logo" /></template>
           <template #logoName>FaceBook</template>
         </LoginButton>
-
-        <LoginButton>
+        <LoginButton @click="loginGuest">
           <template #logoImg><img src="@/assets/images/avatar.png" alt="guest-logo" /></template>
           <template #logoName>訪客登入</template>
         </LoginButton>
@@ -35,9 +37,29 @@ export default {
   data() {
     return {};
   },
+  created() {},
+  computed: {
+    isLogin() {
+      return this.$store.state.islogIn;
+    },
+  },
   methods: {
     async logInFacebook() {
+      //非同步 是promise物件
+      // console.log(this.$store.dispatch("logInFacebook"));
       await this.$store.dispatch("logInFacebook");
+      if (this.$store.state.islogIn) {
+        console.log("前往下一頁");
+        this.$router.push({ name: "Info" });
+      } else {
+        console.log("停留在此頁");
+      }
+    },
+    loginGuest() {
+      this.$router.push({ name: "Info" });
+    },
+    logInGoogle() {
+      this.$router.push({ name: "Info" });
     },
   },
 };

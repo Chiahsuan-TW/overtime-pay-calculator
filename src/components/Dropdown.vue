@@ -36,11 +36,12 @@ export default {
     workPatternList: Array,
     TypeValue: {
       type: String,
+      default: "",
     },
-    // value: Array,
-    // modelModifiers: {
-    //   default: () => [],
-    // },
+    value: Array,
+    modelModifiers: {
+      default: () => [],
+    },
   },
   emits: ["update:TypeValue"],
   data() {

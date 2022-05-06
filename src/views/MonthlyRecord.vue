@@ -1,12 +1,13 @@
 <template>
   <h3>工時及休假紀錄</h3>
   <div class="modal">
-    <pre>目前哪一個companyID:{{ $route.query.companyID }}</pre>
-    <!-- <p>$route.params</p> -->
+    <p>是會員嗎{{ isLogIn }}</p>
+    <pre>目前哪一個companyID:{{ currentCompanyID }}</pre>
     <pre>{{ monthlyRecordData }}</pre>
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
       <div class="calendar-month" v-if="isRouterAlive" ref="calendar-month">
+        {{ selectedDate }}
         <div class="calendar-month-header">
           <CalendarDateIndicator :selected-date="selectedDate" @dateSelected="selectDate" />
         </div>
@@ -81,11 +82,16 @@ export default {
     Stepper,
     ProcedureButton,
   },
-  mounted() {
-    let currentPageComapnyID = this.$route.query.companyID;
-    this.$store.dispatch("recordingData/getMonthlyData", currentPageComapnyID);
+  created() {
+    // 確認是否會員;
+    if (this.isLogIn) {
+      //是會員
+      this.$store.dispatch("recordingData/getMonthlyData", this.currentCompanyID);
+      return;
+    }
+    this.$store.dispatch("recordingData/getLocalStorageMonthlyData", this.currentCompanyID);
   },
-
+  mounted() {},
   data() {
     return {
       selectedDate: dayjs(),
@@ -103,6 +109,12 @@ export default {
     },
   },
   computed: {
+    isLogIn() {
+      return this.$store.getters.isLogIn;
+    },
+    userID() {
+      return this.$store.getters.userID;
+    },
     days() {
       return [...this.previousMonthDays, ...this.currentMonthDays, ...this.nextMonthDays];
     },
@@ -160,17 +172,12 @@ export default {
       });
     },
     monthlyRecordData() {
-      console.log(this.$store.getters["recordingData/monthlyRecordData"]);
       return this.$store.getters["recordingData/monthlyRecordData"];
     },
     currentCompanyID() {
       return this.$store.getters["recordingData/currentCompanyID"];
     },
   },
-
-  // beforeRouteEnter(to, from) {
-  //   console.log(to.params);
-  // },
 };
 </script>
 
