@@ -1,9 +1,9 @@
 <template>
   <h3>基本資料</h3>
   <div class="modal">
-    <p>是會員嗎{{ isLogIn }}</p>
-    <p>使用者{{ $store.state.userID }}</p>
-    <h2>目前資料</h2>
+    <!-- <p>是會員嗎{{ isLogIn }}</p> -->
+    <!-- <p>使用者{{ $store.state.userID }}</p> -->
+    <!-- <h2>目前資料</h2> -->
     <nav class="loading" v-if="isLoading">
       <a href="">loading</a>
     </nav>
@@ -19,7 +19,7 @@
     <Stepper :currentStep="currentStep" />
     <div class="loading_content" v-if="isLoading"></div>
     <div class="modal-content" v-else>
-      <p>{{ editingCompanies }}</p>
+      <!-- <p>{{ editingCompanies }}</p> -->
       <div class="modal-content-item companyName">
         <span>公司名稱:</span>
         <input type="text" :value="editingCompanies[currentIndex].companyName" @input="updateCompanyName" />
@@ -132,7 +132,6 @@ export default {
       return;
     }
     //會員
-    console.log("Info");
     await this.$store.dispatch("getDataBase");
     this.isLoading = false;
     this.editingCompanies = this.currentUserInfoData;

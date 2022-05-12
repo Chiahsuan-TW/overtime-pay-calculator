@@ -1,9 +1,11 @@
 <template>
   <h3>工時及休假紀錄</h3>
   <div class="modal">
-    <p>是會員嗎{{ isLogIn }}</p>
+    <!-- <p>是會員嗎{{ isLogIn }}</p>
+    <pre>目前工作類型:{{ currentWorkPattern }}</pre>
     <pre>目前哪一個companyID:{{ currentCompanyID }}</pre>
-    <pre>{{ monthlyRecordData }}</pre>
+    <pre>當月{{ currentMonthRecordingData }}</pre> -->
+    <!-- <pre>薪水{{ currentWage }}</pre> -->
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
       <div class="calendar-month" v-if="isRouterAlive" ref="calendar-month">
@@ -26,28 +28,7 @@
           </tr>
         </table>
       </div>
-      <div class="record-table">
-        <p class="record-list">
-          <span>當月出勤時數</span>
-          <span>8小時</span>
-        </p>
-        <p class="record-list">
-          <span>當月加班時數</span>
-          <span>10小時</span>
-        </p>
-        <p class="record-list">
-          <span>當月加班費</span>
-          <span>3000 NTD</span>
-        </p>
-        <p class="record-list">
-          <span>當月積假</span>
-          <span>2天</span>
-        </p>
-        <p class="record-list">
-          <span>積假轉換薪資</span>
-          <span>2000 NTD</span>
-        </p>
-      </div>
+      <MonthlyInfo :workingHours="workingHours" :overtimeHours="overtimeHours" :overtimePay="overtimePay"></MonthlyInfo>
       <div class="button-group">
         <router-link :to="{ name: 'Info' }">
           <ProcedureButton class="previous">上一步</ProcedureButton>
@@ -69,6 +50,8 @@ import CalendarWeekdays from "../components/CalendarWeekdays.vue";
 import CalendarMonthDayItem from "../components/CalendarMonthDayItem.vue";
 import Stepper from "../components/Stepper.vue";
 import ProcedureButton from "../components/ProcedureButton.vue";
+import MonthlyInfo from "@/components/MonthlyInfo.vue";
+import moment from "moment";
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
@@ -81,6 +64,7 @@ export default {
     CalendarMonthDayItem,
     Stepper,
     ProcedureButton,
+    MonthlyInfo,
   },
   created() {
     // 確認是否會員;
@@ -107,6 +91,23 @@ export default {
     getWeekday(date) {
       return dayjs(date).weekday();
     },
+    caculateOverTimePay(data, regularHours, extraHours) {
+      return data.reduce((previousValue, currentData) => {
+        const momentStartDuty = moment(currentData.date + " " + currentData.onDuty);
+        const momentOffDuty = moment(currentData.date + " " + currentData.offDuty);
+        const hour = momentOffDuty.diff(momentStartDuty, "hour");
+        const hourlyWage = 100;
+        if (hour > extraHours) {
+          let pay = (hour - extraHours) * 1.67 * hourlyWage + (extraHours - regularHours) * 1.34 * hourlyWage;
+          return (previousValue += pay);
+        }
+        if (hour > regularHours) {
+          let pay = (hour - regularHours) * 1.34 * hourlyWage;
+          return (previousValue += pay);
+        }
+        return previousValue;
+      }, 0);
+    },
   },
   computed: {
     isLogIn() {
@@ -121,11 +122,9 @@ export default {
     today() {
       return dayjs().format("YYYY-MM-DD");
     },
-
     month() {
       return Number(this.selectedDate.format("M"));
     },
-
     year() {
       return Number(this.selectedDate.format("YYYY"));
     },
@@ -171,11 +170,89 @@ export default {
         };
       });
     },
+    currentCompanyID() {
+      return this.$store.getters["recordingData/currentCompanyID"];
+    },
     monthlyRecordData() {
       return this.$store.getters["recordingData/monthlyRecordData"];
     },
-    currentCompanyID() {
-      return this.$store.getters["recordingData/currentCompanyID"];
+    currentMonthRecordingData() {
+      const selectedMonth = moment([this.year, this.month]);
+      return this.monthlyRecordData.filter((item) => {
+        let dateOfYearMonth = item.date.split("-");
+        dateOfYearMonth.pop();
+        return selectedMonth.diff(moment(dateOfYearMonth), "month") === 0;
+      });
+    },
+    currentWorkPattern() {
+      const index = this.$store.getters.currentUserInfoData.findIndex((inforData) => {
+        return inforData.companyID === this.currentCompanyID;
+      });
+      return this.$store.getters.currentUserInfoData[index].workPattern;
+    },
+    currentWage() {
+      const index = this.$store.getters.currentUserInfoData.findIndex((inforData) => {
+        return inforData.companyID === this.currentCompanyID;
+      });
+      // const monthlyMinimumWage = 25250;
+      // this.$store.getters.currentUserInfoData[index].wage
+
+      return index;
+    },
+    workingHours() {
+      return this.currentMonthRecordingData.reduce((total, currentValue) => {
+        const momentStartDuty = moment(currentValue.date + " " + currentValue.onDuty);
+        const momentOffDuty = moment(currentValue.date + " " + currentValue.offDuty);
+        const hour = momentOffDuty.diff(momentStartDuty, "hour");
+        return (total += hour);
+      }, 0);
+    },
+    overtimeHours() {
+      const workPattern = new Map([
+        ["輪班", "shiftWork"],
+        ["非輪班", "nonShiftWork"],
+      ]);
+      const maximumTime = {
+        shiftWork: 10,
+        nonShiftWork: 8,
+      };
+      let totalHours = 0;
+      return this.currentMonthRecordingData.reduce((totalHours, currentData) => {
+        const momentStartDuty = moment(currentData.date + " " + currentData.onDuty);
+        const momentOffDuty = moment(currentData.date + " " + currentData.offDuty);
+        const hour = momentOffDuty.diff(momentStartDuty, "hour");
+        let overTimeOfHour = hour - maximumTime[workPattern.get(this.currentWorkPattern)];
+        if (overTimeOfHour < 0) {
+          overTimeOfHour = 0;
+        }
+        return (totalHours += overTimeOfHour);
+      }, totalHours);
+    },
+    overtimePay() {
+      //整個陣列丟進去
+      //會判斷資料要套用哪一個規則
+      //輪班 >10hr 10~12hr:1.34 、>12hr 1.67
+      //非輪班 >8hr 8~10hr 1.34 10>hr 1.67
+      //非輪班17hr，加班費是1437，輪班17hr，加班費是
+      const workPattern = new Map([
+        ["輪班", "shiftWork"],
+        ["非輪班", "nonShiftWork"],
+      ]);
+      const currentWorkType = workPattern.get(this.currentWorkPattern);
+      const overtimeRules = {
+        shiftWork: {
+          regularHours: 10,
+          extraHours: 12,
+        },
+        nonShiftWork: {
+          regularHours: 8,
+          extraHours: 10,
+        },
+      };
+
+      const regularHours = overtimeRules[currentWorkType].regularHours;
+      const extraHours = overtimeRules[currentWorkType].extraHours;
+      return this.caculateOverTimePay(this.currentMonthRecordingData, regularHours, extraHours);
     },
   },
 };
@@ -224,61 +301,6 @@ table {
   border: 1px solid color.$gray;
 }
 
-.record-table {
-  margin-top: 32px;
-  padding: 23px 19px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  background-color: color.$yellow;
-
-  @include breakpoint.tablet {
-    padding: 46px 39px;
-    justify-content: space-between;
-    background-color: color.$pale-yellow;
-  }
-
-  @include breakpoint.desktop {
-    margin-top: 64px;
-  }
-
-  .record-list {
-    padding: 8px 0;
-    border-bottom: 1px solid color.$primary-dark;
-    display: flex;
-    justify-content: space-between;
-    flex-basis: 80%;
-    font-size: 0;
-
-    @include breakpoint.tablet {
-      flex-basis: 45%;
-    }
-
-    span {
-      @extend %content-small;
-    }
-
-    span:first-child {
-      @extend %content-small-bold;
-    }
-  }
-
-  .record-list + .record-list {
-    margin-top: 10px;
-
-    @include breakpoint.tablet {
-      margin-top: 0;
-    }
-  }
-
-  @include breakpoint.tablet {
-    .record-list:last-child {
-      margin: 10px auto 0;
-      flex-basis: 50%;
-    }
-  }
-}
-
 .button-group {
   margin-top: 30px;
 
@@ -309,9 +331,9 @@ table {
     @include breakpoint.tablet {
       margin-top: 0;
     }
-  }
-  .result:hover {
-    background-color: color.$brown;
+    &:hover {
+      background-color: color.$brown;
+    }
   }
 }
 </style>

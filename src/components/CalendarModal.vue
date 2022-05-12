@@ -30,6 +30,7 @@
             format="HH:mm"
             :disabled="monthlyData.isDayOff"
             v-model:value="monthlyData.offDuty"
+            :disabledHours="getDisableHours"
           />
         </div>
         <div class="day-off">
@@ -127,6 +128,20 @@ export default {
 
       this.$emit("close");
     },
+    getDisableHours() {
+      let hours = [];
+      for (let hour = 0; hour < this.monthlyData.onDuty.hour(); hour++) {
+        hours.push(hour);
+      }
+      return hours;
+    },
+    // getDisabledMinutes() {
+    //   let minutes = [];
+    //   for (let minute = 0; minute < this.monthlyData.onDuty.minute(); minute++) {
+    //     minutes.push(minute);
+    //   }
+    //   return minutes;
+    // },
   },
   computed: {
     isLogIn() {

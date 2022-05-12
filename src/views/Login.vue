@@ -3,9 +3,9 @@
     <section>
       <div class="auth-form">
         <h1>被偷走的移工薪資</h1>
-        <p>使用者{{ $store.state.userID }}</p>
+        <!-- <p>使用者{{ $store.state.userID }}</p> -->
         <p>選擇登入方式</p>
-        isLogin:{{ $store.getters.isLogIn }}
+        <!-- isLogin:{{ $store.getters.isLogIn }} -->
         <!-- <router-link :to="{ name: 'Info' }"> -->
         <LoginButton @click="logInGoogle">
           <template #logoImg><img src="@/assets/images/google-logo.png" alt="google-logo" /></template>
