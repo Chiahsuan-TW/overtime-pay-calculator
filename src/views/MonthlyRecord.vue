@@ -81,6 +81,7 @@ export default {
       selectedDate: dayjs(),
       currentStep: 2,
       isRouterAlive: true,
+      // workingHours: 100,
     };
   },
   props: ["userInput"],
