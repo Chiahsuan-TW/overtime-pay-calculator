@@ -3,6 +3,10 @@ const MonthlyRecord = {
   namespaced: true,
   state: () => ({
     recordData: [],
+    monthlySummary: [],
+    workingHours: [],
+    overtimeHours: [],
+    overtimePay: [],
   }),
   mutations: {
     getMonthlyData(state, getData) {
@@ -20,6 +24,15 @@ const MonthlyRecord = {
     },
     clearPreviousData(state) {
       state.recordData = [];
+    },
+    updatedＷorkingHours(state, workingHours) {
+      state.workingHours = workingHours;
+    },
+    updatedOvertimeHours(state, overtimeHours) {
+      state.overtimeHours = overtimeHours;
+    },
+    updateOvertimePay(state, overtimePay) {
+      state.overtimePay = overtimePay;
     },
   },
   actions: {

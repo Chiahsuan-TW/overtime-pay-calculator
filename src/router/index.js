@@ -23,16 +23,16 @@ const routes = [
         path: "/Info",
         name: "Info",
         component: () => import("@/views/Info.vue"),
-        beforeEnter: async (to, from) => {
-          console.log("從", from.name, "到", to.name);
-          // try {
-          //   await store.dispatch("getDataBase");
-          //   return true;
-          // } catch (error) {
-          //   console.log(error);
-          //   return false;
-          // }
-        },
+        // beforeEnter: async (to, from) => {
+        //   console.log("從", from.name, "到", to.name);/
+        //   // try {
+        //   //   await store.dispatch("getDataBase");
+        //   //   return true;
+        //   // } catch (error) {
+        //   //   console.log(error);
+        //   //   return false;
+        //   // }
+        // },
       },
       {
         path: "/MonthlyRecord/",

@@ -1,7 +1,7 @@
 <template>
   <div class="modal-background">
     <div class="modal">
-      <pre>{{ isLogIn }}</pre>
+      <!-- <pre>{{ isLogIn }}</pre> -->
       <span class="close" @click="$emit('close')">&#x2715;</span>
       <div class="modal-content">
         <div class="modal-title">

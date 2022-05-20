@@ -1,14 +1,22 @@
 <template>
+  <a-dropdown>
+    <a class="ant-dropdown-link" @click.prevent>
+      Hover me, Click menu item
+      <DownOutlined />
+    </a>
+    <template #overlay>
+      <a-menu @click="onClick">
+        <a-menu-item key="1">1st menu item</a-menu-item>
+        <a-menu-item key="2">2nd menu item</a-menu-item>
+        <a-menu-item key="3">3rd menu item</a-menu-item>
+      </a-menu>
+    </template>
+  </a-dropdown>
   <h3>2021每月出勤明細</h3>
   <div class="modal">
     <Stepper :currentStep="currentStep" />
-
     <div class="modal-content">
-      <MonthlyList
-        v-for="(record, index) in monthlyRecords"
-        :key="index"
-        v-bind="record"
-      />
+      <MonthlyList v-for="(record, index) in monthlyRecords" :key="index" v-bind="record" />
     </div>
 
     <div class="divider"></div>
@@ -18,6 +26,7 @@
     </div>
 
     <div class="bottom">
+      <ProcedureButton class="previous-button" @click="previousButton">上一步</ProcedureButton>
       <ProcedureButton class="complete-button">完成</ProcedureButton>
     </div>
   </div>
@@ -27,7 +36,7 @@ import Stepper from "@/components/Stepper.vue";
 import ProcedureButton from "@/components/ProcedureButton.vue";
 import MonthlyList from "../components/MonthlyList.vue";
 import AnnualList from "../components/AnnualList.vue";
-
+import { DownOutlined } from "@ant-design/icons-vue";
 export default {
   name: "AnnualRecord",
   components: {
@@ -35,6 +44,7 @@ export default {
     ProcedureButton,
     MonthlyList,
     AnnualList,
+    DownOutlined,
   },
   data() {
     return {
@@ -45,6 +55,11 @@ export default {
         { month: "3月", workingHours: 20, overtimeHours: 2, overtimePay: 2000 },
       ],
     };
+  },
+  methods: {
+    previousButton() {
+      this.$router.back();
+    },
   },
 };
 </script>
@@ -102,11 +117,16 @@ h3 {
   width: fit-content;
   margin: 50px auto 0;
 }
-
+.previous-button {
+  width: 172px;
+  margin-right: 20px;
+  &:hover {
+    background-color: color.$brown;
+  }
+}
 .complete-button {
   width: 172px;
   background-color: color.$primary-dark;
-
   &:hover {
     background-color: color.$brown;
   }

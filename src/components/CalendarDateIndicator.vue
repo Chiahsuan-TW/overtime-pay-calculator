@@ -17,10 +17,6 @@ export default {
       type: Object,
       required: true,
     },
-    // currentDate: {
-    //   type: String,
-    //   required: true,
-    // },
   },
   methods: {
     selectPreviousYear() {

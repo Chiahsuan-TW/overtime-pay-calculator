@@ -12,14 +12,14 @@
       <span>當月加班費</span>
       <span>{{ overtimePay }}NTD</span>
     </p>
-    <p class="record-list">
+    <!-- <p class="record-list">
       <span>當月積假</span>
       <span>{{ annualLeave }}天</span>
-    </p>
-    <p class="record-list">
+    </p> -->
+    <!-- <p class="record-list">
       <span>積假轉換薪資</span>
       <span>{{ wagesForLeaveDays }} NTD</span>
-    </p>
+    </p> -->
   </div>
 </template>
 <script>
