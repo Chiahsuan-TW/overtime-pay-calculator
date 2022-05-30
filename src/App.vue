@@ -4,13 +4,13 @@
 <script>
 export default {
   mounted() {
-    // window.addEventListener("beforeunload", () => {
-    //   localStorage.removeItem("userInfo");
-    //   localStorage.removeItem("company1");
-    //   localStorage.removeItem("company2");
-    //   localStorage.removeItem("company3");
-    //   localStorage.removeItem("company4");
-    // });
+    window.addEventListener("beforeunload", () => {
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("company1");
+      localStorage.removeItem("company2");
+      localStorage.removeItem("company3");
+      localStorage.removeItem("company4");
+    });
   },
 };
 </script>
