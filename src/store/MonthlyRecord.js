@@ -6,7 +6,7 @@ const MonthlyRecord = {
     monthlySummary: [],
     workingHours: [],
     overtimeHours: [],
-    overtimePay: [],
+    overtimePays: [],
   }),
   mutations: {
     getMonthlyData(state, getData) {
@@ -32,7 +32,7 @@ const MonthlyRecord = {
       state.overtimeHours = overtimeHours;
     },
     updateOvertimePay(state, overtimePay) {
-      state.overtimePay = overtimePay;
+      state.overtimePays = overtimePay;
     },
   },
   actions: {
@@ -94,6 +94,15 @@ const MonthlyRecord = {
     },
     currentCompanyID(state, getters, rootState) {
       return `company${rootState.currentIndex + 1}`;
+    },
+    workingHours(state) {
+      return state.workingHours;
+    },
+    overtimeHours(state) {
+      return state.overtimeHours;
+    },
+    overtimePays(state) {
+      return state.overtimePays;
     },
   },
 };

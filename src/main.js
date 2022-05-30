@@ -6,6 +6,7 @@ import store from "./store";
 import "ant-design-vue/dist/antd.css";
 import "../src/assets/scss/custom/_custom-calendar.scss";
 import "../src/assets/scss/custom/_custom-timepicker.scss";
+import "../src/assets/scss/custom/_dropDown.scss";
 import "@/assets/scss/_reset.scss";
 
 import { DatePicker, TimePicker, Dropdown, Menu } from "ant-design-vue";

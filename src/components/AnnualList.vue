@@ -1,18 +1,19 @@
 <template>
   <div class="modal-content-item">
-    <h4>2021年度統計</h4>
+    <h4>{{ year }}年度統計</h4>
+    <!-- <p>{{ calculateAnnualOfYear }}</p> -->
     <div class="monthly-details">
       <p class="working-hours">
         <span>當年度出勤時數</span>
-        <span>60小時</span>
+        <span>{{ workingHourOfYear ? workingHourOfYear : 0 }}小時</span>
       </p>
       <p class="overtime-hours">
         <span>當年度加班時數</span>
-        <span>6小時</span>
+        <span>{{ overtimeHourOfYear ? overtimeHourOfYear : 0 }}小時</span>
       </p>
       <p class="overtime-hours">
         <span>當年度加班費</span>
-        <span>6000 NTD</span>
+        <span>{{ overtimePayOfYear ? overtimePayOfYear : 0 }}NTD</span>
       </p>
     </div>
   </div>
@@ -21,6 +22,21 @@
 <script>
 export default {
   name: "AnnualList",
+  props: ["year", "calculateAnnualOfYear"],
+  computed: {
+    workingHourOfYear() {
+      const { workingHour } = { ...this.calculateAnnualOfYear };
+      return workingHour;
+    },
+    overtimeHourOfYear() {
+      const { overtimeHour } = { ...this.calculateAnnualOfYear };
+      return overtimeHour;
+    },
+    overtimePayOfYear() {
+      const { overtimePay } = { ...this.calculateAnnualOfYear };
+      return overtimePay;
+    },
+  },
 };
 </script>
 

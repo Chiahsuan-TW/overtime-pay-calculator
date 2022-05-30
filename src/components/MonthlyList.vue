@@ -1,14 +1,14 @@
 <template>
   <div class="modal-content-item">
-    <h4>{{ month }}</h4>
+    <h4>{{ month }}月</h4>
     <div class="monthly-details">
       <p class="working-hours">
         <span>當月出勤時數</span>
-        <span>{{ workingHours }}小時</span>
+        <span>{{ workingHour }}小時</span>
       </p>
       <p class="overtime-hours">
         <span>當月加班時數</span>
-        <span>{{ overtimeHours }}小時</span>
+        <span>{{ overtimeHour }}小時</span>
       </p>
       <p class="overtime-hours">
         <span>當月加班費</span>
@@ -23,19 +23,19 @@ export default {
   name: "MonthlyList",
   props: {
     month: {
-      type: String,
+      type: [Number, String],
       required: true,
     },
-    workingHours: {
-      type: Number,
+    workingHour: {
+      type: [Number, String],
       required: true,
     },
-    overtimeHours: {
-      type: Number,
+    overtimeHour: {
+      type: [Number, String],
       required: true,
     },
     overtimePay: {
-      type: Number,
+      type: [Number, String],
       required: true,
     },
   },

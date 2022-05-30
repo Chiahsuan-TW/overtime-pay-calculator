@@ -1,0 +1,29 @@
+.custom-dropdown {
+  a {
+    width: 200px;
+    font-weight: 900;
+  }
+  > a {
+    display: flex;
+    padding: 10px;
+    color: color.$black;
+    background-color: color.$pale-yellow;
+  }
+  .wrap_img {
+    width: 24px;
+    height: 24px;
+    margin-right: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  .display_text {
+    flex-grow: 1;
+  }
+  .ant-dropdown-trigger .anticon.anticon-down {
+    display: flex;
+    align-items: center;
+  }
+}

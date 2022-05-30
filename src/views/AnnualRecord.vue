@@ -1,30 +1,47 @@
 <template>
-  <a-dropdown>
-    <a class="ant-dropdown-link" @click.prevent>
-      Hover me, Click menu item
-      <DownOutlined />
-    </a>
-    <template #overlay>
-      <a-menu @click="onClick">
-        <a-menu-item key="1">1st menu item</a-menu-item>
-        <a-menu-item key="2">2nd menu item</a-menu-item>
-        <a-menu-item key="3">3rd menu item</a-menu-item>
-      </a-menu>
-    </template>
-  </a-dropdown>
-  <h3>2021每月出勤明細</h3>
+  <h3>出勤明細</h3>
+  <!-- <pre>workingHours{{ workingHours }}</pre> -->
+  <!-- <pre>overtimeHours{{ overtimeHours }}</pre> -->
+  <!-- <pre>overtimePays{{ overtimePays }}</pre> -->
+  <!-- <pre>formattedData{{ formattedData }}</pre> -->
+  <!-- <pre>{{ showData }}</pre> -->
+  <!-- <pre>{{ calculateAnnualOfYear }}</pre> -->
   <div class="modal">
     <Stepper :currentStep="currentStep" />
+    <div class="modal-content custom-dropdown">
+      <a-dropdown>
+        <a class="ant-dropdown-link" @click.prevent>
+          <div class="wrap_img">
+            <img src="../assets/images/calendar.png" alt="calendar icon" />
+          </div>
+          <span class="display_text">{{ selectedYear ? selectedYear : "選擇年份" }}</span>
+          <DownOutlined />
+        </a>
+        <template #overlay>
+          <a-menu @click="clickYear">
+            <a-menu-item v-for="year in years" :key="year">{{ year }}</a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
+    </div>
+
     <div class="modal-content">
-      <MonthlyList v-for="(record, index) in monthlyRecords" :key="index" v-bind="record" />
+      <MonthlyList
+        v-for="(data, index) in showData"
+        :key="index"
+        :year="data.year"
+        :month="data.month"
+        :workingHour="data.workingHour"
+        :overtimeHour="data.overtimeHour"
+        :overtimePay="data.overtimePay"
+      />
     </div>
 
     <div class="divider"></div>
 
     <div class="result">
-      <AnnualList />
+      <AnnualList :year="selectedYear" :calculateAnnualOfYear="calculateAnnualOfYear" />
     </div>
-
     <div class="bottom">
       <ProcedureButton class="previous-button" @click="previousButton">上一步</ProcedureButton>
       <ProcedureButton class="complete-button">完成</ProcedureButton>
@@ -49,16 +66,84 @@ export default {
   data() {
     return {
       currentStep: 3,
+      selectedYear: 2022,
       monthlyRecords: [
-        { month: "1月", workingHours: 20, overtimeHours: 2, overtimePay: 2000 },
-        { month: "2月", workingHours: 20, overtimeHours: 2, overtimePay: 2000 },
-        { month: "3月", workingHours: 20, overtimeHours: 2, overtimePay: 2000 },
+        {
+          year: 2020,
+          month: "1月",
+          workingHours: 20,
+          overtimeHours: 2,
+          overtimePay: 2000,
+        },
+        {
+          year: 2020,
+          month: "2月",
+          workingHours: 20,
+          overtimeHours: 2,
+          overtimePay: 2000,
+        },
+        {
+          year: 2020,
+          month: "3月",
+          workingHours: 20,
+          overtimeHours: 2,
+          overtimePay: 2000,
+        },
       ],
     };
   },
   methods: {
     previousButton() {
       this.$router.back();
+    },
+    clickYear(e) {
+      this.selectedYear = e.key;
+    },
+  },
+
+  computed: {
+    workingHours() {
+      return this.$store.getters["recordingData/workingHours"] || [];
+    },
+    overtimeHours() {
+      return this.$store.getters["recordingData/overtimeHours"] || [];
+    },
+    overtimePays() {
+      return this.$store.getters["recordingData/overtimePays"] || [];
+    },
+    formattedData() {
+      const data = [];
+      for (let workingHour in this.workingHours) {
+        const formattedObject = {};
+        const yearLength = workingHour.length - 2;
+        formattedObject["year"] = workingHour.slice(0, yearLength);
+        formattedObject["month"] = workingHour.slice(-2);
+        formattedObject["workingHour"] = this.workingHours[workingHour];
+        formattedObject["overtimeHour"] = this.overtimeHours[workingHour];
+        formattedObject["overtimePay"] = this.overtimePays[workingHour];
+        data.push(formattedObject);
+      }
+      return data;
+    },
+    years() {
+      return this.formattedData.reduce((previousData, currentData) => {
+        const findResult = previousData.findIndex((item) => item === currentData.year);
+        if (findResult === -1) {
+          previousData.push(currentData.year);
+        }
+        return previousData;
+      }, []);
+    },
+    showData() {
+      return this.formattedData.filter((item) => item.year === this.selectedYear);
+    },
+    calculateAnnualOfYear() {
+      return this.showData.reduce((previousData, currentData) => {
+        previousData["workingHour"] = (previousData["workingHour"] ?? 0) + currentData.workingHour;
+        previousData["overtimeHour"] = (previousData["overtimeHour"] ?? 0) + currentData.overtimeHour;
+        previousData["overtimePay"] = (previousData["overtimePay"] ?? 0) + currentData.overtimePay;
+        return previousData;
+      }, {});
     },
   },
 };
