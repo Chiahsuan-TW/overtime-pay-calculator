@@ -7,15 +7,15 @@
         <p>選擇登入方式</p>
         <!-- isLogin:{{ $store.getters.isLogIn }} -->
         <!-- <router-link :to="{ name: 'Info' }"> -->
-        <LoginButton @click="logInGoogle">
+        <!-- <LoginButton @click="logInGoogle">
           <template #logoImg><img src="@/assets/images/google-logo.png" alt="google-logo" /></template>
           <template #logoName>Google</template>
-        </LoginButton>
+        </LoginButton> -->
         <!-- </router-link> -->
-        <LoginButton @click="logInFacebook">
+        <!-- <LoginButton @click="logInFacebook">
           <template #logoImg><img src="@/assets/images/facebook-logo.png" alt="facebook-logo" /></template>
           <template #logoName>FaceBook</template>
-        </LoginButton>
+        </LoginButton> -->
         <LoginButton @click="loginGuest">
           <template #logoImg><img src="@/assets/images/avatar.png" alt="guest-logo" /></template>
           <template #logoName>訪客登入</template>

@@ -101,7 +101,6 @@ export default {
       this.$store.commit("recordingData/updatedＷorkingHours", this.calculateWorkingHours);
       this.$store.commit("recordingData/updatedOvertimeHours", this.calculateOvertimeHours);
       this.$store.commit("recordingData/updateOvertimePay", this.calculateOvertimePay);
-      // calculateOvertimePay
     },
   },
   computed: {
@@ -323,12 +322,13 @@ h3 {
   background-color: #fff;
   margin: 40px 0 0;
   padding: 40px 0 0;
+  overflow-x: auto;
 
   @include breakpoint.tablet {
     width: 80%;
     max-width: 1094px;
     max-height: 600px;
-    overflow-x: auto;
+
     overflow-y: scroll;
     margin: 40px auto 0;
     box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);

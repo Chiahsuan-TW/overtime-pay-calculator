@@ -24,8 +24,11 @@
         </template>
       </a-dropdown>
     </div>
+    <div class="modal-content" v-if="!isClickYear">
+      <h2>請點選年份</h2>
+    </div>
 
-    <div class="modal-content">
+    <div class="modal-content" v-else>
       <MonthlyList
         v-for="(data, index) in showData"
         :key="index"
@@ -66,7 +69,7 @@ export default {
   data() {
     return {
       currentStep: 3,
-      selectedYear: 2022,
+      selectedYear: "2022",
       monthlyRecords: [
         {
           year: 2020,
@@ -90,6 +93,7 @@ export default {
           overtimePay: 2000,
         },
       ],
+      isClickYear: false,
     };
   },
   methods: {
@@ -98,9 +102,9 @@ export default {
     },
     clickYear(e) {
       this.selectedYear = e.key;
+      this.isClickYear = true;
     },
   },
-
   computed: {
     workingHours() {
       return this.$store.getters["recordingData/workingHours"] || [];

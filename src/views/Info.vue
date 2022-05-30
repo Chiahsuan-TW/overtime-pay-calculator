@@ -122,6 +122,10 @@ export default {
       isLoading: true,
     };
   },
+  mounted() {
+    // const modal = document.querySelector(".modal");
+    // console.log(modal);
+  },
   async created() {
     //確認是否是會員
     // 非會員
@@ -212,12 +216,13 @@ h3 {
   border-radius: 16px;
   margin: 40px auto 0;
   padding: 40px 0;
+  overflow-x: auto;
 
   @include breakpoint.tablet {
     width: 80%;
     max-width: 1094px;
     max-height: 600px;
-    overflow-x: auto;
+
     overflow-y: scroll;
     margin: 40px auto 0;
     box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);
