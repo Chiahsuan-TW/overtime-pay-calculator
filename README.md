@@ -1,24 +1,50 @@
 # overtime-pay-calculator
 
-## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+專案:被偷走的移工薪資
 
-### Lints and fixes files
-```
-npm run lint
-```
+痛點：部分外籍勞工在台灣無法得到合理薪資報酬
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+解決痛點:
+
+藉由這平台幫助他們記錄上班時數，並同時計算加班時數和加班費
+
+
+### 登入
+目前只有訪客登入
+
+未來會增加facebook登入、google登入
+![](https://i.imgur.com/QbizRSk.png)
+
+### 基本資料
+  
+![](https://i.imgur.com/T7axCy1.png)
+
+* 使用者可以記錄四家公司相關資訊，也可以薪資計算
+* 可以記錄公司名稱、工作類型、工作型態...等
+
+
+
+### 工時及休假記錄
+
+![](https://i.imgur.com/RwsQABU.png)
+![](https://i.imgur.com/Lqiqa0K.png)
+
+
+* 手刻日曆可以切換月份、年份
+* 日曆頁面點選日期會有彈跳視窗填寫當日工作時數
+* 有填寫的日期會出現顏色標記
+* 計算當月工時、加班時數
+* 依據勞基法規則計算加班費
+
+### 出勤明細
+
+
+![](https://i.imgur.com/zuwRUoW.png)
+
+* 顯示歷年每月資料
+
+下拉式選單選擇年份，會出現相對應的計算結果和內容
+
+

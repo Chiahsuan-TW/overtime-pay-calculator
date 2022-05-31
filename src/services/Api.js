@@ -10,18 +10,21 @@ import axios from "axios";
 const api = {
   //到時給async await的await 所以要return promise物件
   getDataBase() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(
-          "https://script.google.com/macros/s/AKfycbzIEThR60wFbKhk6Re0ClPk1kfQX_MelHiJG-0ncHjUSzyggviznfd3zyHfJgJEojGlCQ/exec"
-        )
-        .then((response) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+    return axios.get(
+      "https://script.google.com/macros/s/AKfycbzIEThR60wFbKhk6Re0ClPk1kfQX_MelHiJG-0ncHjUSzyggviznfd3zyHfJgJEojGlCQ/exec"
+    );
+    // return new Promise((resolve, reject) => {
+    //   axios
+    //     .get(
+    //       "https://script.google.com/macros/s/AKfycbzIEThR60wFbKhk6Re0ClPk1kfQX_MelHiJG-0ncHjUSzyggviznfd3zyHfJgJEojGlCQ/exec"
+    //     )
+    //     .then((response) => {
+    //       resolve(response.data);
+    //     })
+    //     .catch((error) => {
+    //       reject(error);
+    //     });
+    // });
   },
 };
 
