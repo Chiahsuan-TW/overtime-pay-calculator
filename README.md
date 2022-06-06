@@ -27,7 +27,7 @@
 ### 工時及休假記錄頁面
 
 ![](https://i.imgur.com/RwsQABU.png)
-![](https://i.imgur.com/Lqiqa0K.png)
+![](https://i.imgur.com/MCdADV3.png)
 
 
 * 手刻日曆可以切換月份、年份
