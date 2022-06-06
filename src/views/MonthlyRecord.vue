@@ -1,19 +1,14 @@
 <template>
   <h3>工時及休假紀錄</h3>
   <div class="modal">
-    <!-- <p>是會員嗎{{ isLogIn }}</p>
-    <pre>{{ monthlyRecordData }}</pre> -->
-    <!-- <pre>工作類型:{{ currentWorkPattern }}</pre>
-    <pre>工作時數:{{ calculateWorkingHours }}</pre>
-    <pre>加班時數:{{ calculateOvertimeHours }}</pre>
-    <pre>加班費用:{{ calculateOvertimePay }}</pre>
-    <pre>{{ showingData }}</pre> -->
     <Stepper :currentStep="currentStep" />
     <div class="modal-content">
       <div class="calendar-month" v-if="isRouterAlive" ref="calendar-month">
-        <!-- {{ selectedDate }} -->
         <div class="calendar-month-header">
-          <CalendarDateIndicator :selected-date="selectedDate" @dateSelected="selectDate" />
+          <CalendarDateIndicator
+            :selected-date="selectedDate"
+            @dateSelected="selectDate"
+          />
         </div>
         <table>
           <CalendarWeekdays />
@@ -25,6 +20,7 @@
               :is-current-month="day.isCurrentMonth"
               :is-today="day.date === today"
               :monthlyRecordData="monthlyRecordData"
+              @deleteItem="deleteItem"
             >
             </CalendarMonthDayItem>
           </tr>
@@ -40,7 +36,9 @@
           <ProcedureButton class="previous">上一步</ProcedureButton>
         </router-link>
         <router-link :to="{ name: 'AnnualRecord' }">
-          <ProcedureButton class="result" @click="saveMonthlyData">歷月應得加班費</ProcedureButton>
+          <ProcedureButton class="result" @click="saveMonthlyData"
+            >歷月應得加班費</ProcedureButton
+          >
         </router-link>
       </div>
     </div>
@@ -76,10 +74,16 @@ export default {
     // 確認是否會員;
     if (this.isLogIn) {
       //是會員
-      this.$store.dispatch("recordingData/getMonthlyData", this.currentCompanyID);
+      this.$store.dispatch(
+        "recordingData/getMonthlyData",
+        this.currentCompanyID
+      );
       return;
     }
-    this.$store.dispatch("recordingData/getLocalStorageMonthlyData", this.currentCompanyID);
+    this.$store.dispatch(
+      "recordingData/getLocalStorageMonthlyData",
+      this.currentCompanyID
+    );
   },
   mounted() {},
   data() {
@@ -98,9 +102,25 @@ export default {
       return dayjs(date).weekday();
     },
     saveMonthlyData() {
-      this.$store.commit("recordingData/updatedＷorkingHours", this.calculateWorkingHours);
-      this.$store.commit("recordingData/updatedOvertimeHours", this.calculateOvertimeHours);
-      this.$store.commit("recordingData/updateOvertimePay", this.calculateOvertimePay);
+      this.$store.commit(
+        "recordingData/updatedＷorkingHours",
+        this.calculateWorkingHours
+      );
+      this.$store.commit(
+        "recordingData/updatedOvertimeHours",
+        this.calculateOvertimeHours
+      );
+      this.$store.commit(
+        "recordingData/updateOvertimePay",
+        this.calculateOvertimePay
+      );
+    },
+    deleteItem(date) {
+      this.$store.commit("recordingData/deleteRecordData", date);
+      this.$store.dispatch(
+        "recordingData/saveLocalStorageMonthlyData",
+        this.currentCompanyID
+      );
     },
   },
   computed: {
@@ -111,7 +131,11 @@ export default {
       return this.$store.getters.userID;
     },
     days() {
-      return [...this.previousMonthDays, ...this.currentMonthDays, ...this.nextMonthDays];
+      return [
+        ...this.previousMonthDays,
+        ...this.currentMonthDays,
+        ...this.nextMonthDays,
+      ];
     },
     today() {
       return dayjs().format("YYYY-MM-DD");
@@ -128,30 +152,45 @@ export default {
     currentMonthDays() {
       return [...Array(this.numberOfDaysInMonth)].map((day, index) => {
         return {
-          date: dayjs(`${this.year}-${this.month}-${index + 1}`).format("YYYY-MM-DD"),
+          date: dayjs(`${this.year}-${this.month}-${index + 1}`).format(
+            "YYYY-MM-DD"
+          ),
           isCurrentMonth: true,
-          weekday: this.getWeekday(dayjs(`${this.year}-${this.month}-${index + 1}`).format("YYYY-MM-DD")),
+          weekday: this.getWeekday(
+            dayjs(`${this.year}-${this.month}-${index + 1}`).format(
+              "YYYY-MM-DD"
+            )
+          ),
         };
       });
     },
     previousMonthDays() {
       const firstDayOfTheMonth = this.getWeekday(this.currentMonthDays[0].date);
-      const previousMonth = dayjs(`${this.year}-${this.month}-01`).subtract(1, "month");
-      const numberOfDaysInPreviousMonth = firstDayOfTheMonth ? firstDayOfTheMonth - 1 : 6;
+      const previousMonth = dayjs(`${this.year}-${this.month}-01`).subtract(
+        1,
+        "month"
+      );
+      const numberOfDaysInPreviousMonth = firstDayOfTheMonth
+        ? firstDayOfTheMonth - 1
+        : 6;
       const lastMondayDayOfMonth = dayjs(this.currentMonthDays[0].date)
         .subtract(numberOfDaysInPreviousMonth, "day")
         .date();
       return [...Array(numberOfDaysInPreviousMonth)].map((day, index) => {
         return {
-          date: dayjs(`${previousMonth.year()}-${previousMonth.month() + 1}-${lastMondayDayOfMonth + index}`).format(
-            "YYYY-MM-DD"
-          ),
+          date: dayjs(
+            `${previousMonth.year()}-${previousMonth.month() + 1}-${
+              lastMondayDayOfMonth + index
+            }`
+          ).format("YYYY-MM-DD"),
           isCurrentMonth: false,
         };
       });
     },
     nextMonthDays() {
-      const lastDayOfTheMonthWeekday = this.getWeekday(`${this.year}-${this.month}-${this.currentMonthDays.length}`);
+      const lastDayOfTheMonthWeekday = this.getWeekday(
+        `${this.year}-${this.month}-${this.currentMonthDays.length}`
+      );
       const nextMonth = dayjs(`${this.year}-${this.month}-01`).add(1, "month");
       const visibleNumberOfDaysFromNextMonth = lastDayOfTheMonthWeekday
         ? 7 - lastDayOfTheMonthWeekday
@@ -159,7 +198,9 @@ export default {
 
       return [...Array(visibleNumberOfDaysFromNextMonth)].map((day, index) => {
         return {
-          date: dayjs(`${nextMonth.year()}-${nextMonth.month() + 1}-${index + 1}`).format("YYYY-MM-DD"),
+          date: dayjs(
+            `${nextMonth.year()}-${nextMonth.month() + 1}-${index + 1}`
+          ).format("YYYY-MM-DD"),
           isCurrentMonth: false,
         };
       });
@@ -172,9 +213,11 @@ export default {
     },
 
     currentCompanyData() {
-      const index = this.$store.getters.currentUserInfoData.findIndex((item) => {
-        return item.companyID === this.currentCompanyID;
-      });
+      const index = this.$store.getters.currentUserInfoData.findIndex(
+        (item) => {
+          return item.companyID === this.currentCompanyID;
+        }
+      );
       return this.$store.getters.currentUserInfoData[index];
     },
     currentWorkPattern() {
@@ -206,8 +249,12 @@ export default {
       for (let month of months) {
         const currentData = data[month];
         const result = currentData.reduce((total, currentValue) => {
-          const momentStartDuty = moment(currentValue.date + " " + currentValue.onDuty);
-          const momentOffDuty = moment(currentValue.date + " " + currentValue.offDuty);
+          const momentStartDuty = moment(
+            currentValue.date + " " + currentValue.onDuty
+          );
+          const momentOffDuty = moment(
+            currentValue.date + " " + currentValue.offDuty
+          );
           const hour = momentOffDuty.diff(momentStartDuty, "hour");
           return (total += hour);
         }, 0);
@@ -231,11 +278,16 @@ export default {
       for (let month of months) {
         const currentData = data[month];
         const result = currentData.reduce((total, currentValue) => {
-          let momentStartDuty = moment(currentValue.date + " " + currentValue.onDuty);
-          let momentOffDuty = moment(currentValue.date + " " + currentValue.offDuty);
+          let momentStartDuty = moment(
+            currentValue.date + " " + currentValue.onDuty
+          );
+          let momentOffDuty = moment(
+            currentValue.date + " " + currentValue.offDuty
+          );
           let hour = momentOffDuty.diff(momentStartDuty, "hour");
           //扣掉上班時數，上班時數會根據哪一個工作型態
-          let workingMaximumTime = maximumTimes[workPattern.get(this.currentWorkPattern)];
+          let workingMaximumTime =
+            maximumTimes[workPattern.get(this.currentWorkPattern)];
           let overTimeOfHour = hour - workingMaximumTime;
           if (overTimeOfHour < 0) {
             overTimeOfHour = 0;
@@ -275,14 +327,20 @@ export default {
         const currentData = data[month];
         const result = Math.round(
           currentData.reduce((previousValue, currentData) => {
-            const momentStartDuty = moment(currentData.date + " " + currentData.onDuty);
-            const momentOffDuty = moment(currentData.date + " " + currentData.offDuty);
+            const momentStartDuty = moment(
+              currentData.date + " " + currentData.onDuty
+            );
+            const momentOffDuty = moment(
+              currentData.date + " " + currentData.offDuty
+            );
             const hour = momentOffDuty.diff(momentStartDuty, "hour");
             const workingDay = 22;
             const workingHours = 8;
             const hourlyWage = this.currentWage / workingDay / workingHours;
             if (hour > extraHours) {
-              let pay = (hour - extraHours) * 1.67 * hourlyWage + (extraHours - regularHours) * 1.34 * hourlyWage;
+              let pay =
+                (hour - extraHours) * 1.67 * hourlyWage +
+                (extraHours - regularHours) * 1.34 * hourlyWage;
               return (previousValue += pay);
             }
             if (hour > regularHours) {
@@ -297,7 +355,9 @@ export default {
       return monthlyOvertimePays;
     },
     showingData() {
-      const showMonthly = String(this.year) + (this.month < 10 ? "0" + this.month : String(this.month));
+      const showMonthly =
+        String(this.year) +
+        (this.month < 10 ? "0" + this.month : String(this.month));
       return {
         year: this.year,
         month: this.month < 10 ? "0" + this.month : this.month,
@@ -306,8 +366,6 @@ export default {
         overtimePay: this.calculateOvertimePay[showMonthly],
       };
     },
-
-    //目前哪一個資料
   },
 };
 </script>

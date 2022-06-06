@@ -22,6 +22,14 @@ const MonthlyRecord = {
       }
       state.recordData.push(currentData);
     },
+    deleteRecordData(state, date) {
+      console.log("原本資料", state.recordData);
+      //會刪掉資料
+      console.log("刪除date", date);
+      const result = state.recordData.filter((item) => item.date !== date);
+      //在存到localstoreage //要先知道哪一間公司
+      state.recordData = result;
+    },
     clearPreviousData(state) {
       state.recordData = [];
     },
@@ -77,11 +85,16 @@ const MonthlyRecord = {
           userID: rootState.userID,
         },
       })
-        .then((response) => console.log("postMonthlyDataResponse:", response.data))
+        .then((response) =>
+          console.log("postMonthlyDataResponse:", response.data)
+        )
         .catch(() => console.log("error"));
     },
     saveLocalStorageMonthlyData({ state }, currentPageComapnyID) {
-      localStorage.setItem(currentPageComapnyID, JSON.stringify(state.recordData));
+      localStorage.setItem(
+        currentPageComapnyID,
+        JSON.stringify(state.recordData)
+      );
     },
   },
   getters: {

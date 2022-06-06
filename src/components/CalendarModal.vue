@@ -35,7 +35,11 @@
         </div>
         <div class="day-off">
           <div>
-            <input type="checkbox" id="day-off" v-model="monthlyData.isDayOff" />
+            <input
+              type="checkbox"
+              id="day-off"
+              v-model="monthlyData.isDayOff"
+            />
             <label for="day-off">請假</label>
           </div>
           <div>
@@ -53,8 +57,17 @@
           </div>
         </div>
         <div class="button-group">
-          <ProcedureButton @click="$emit('close')" class="cancel">取消</ProcedureButton>
-          <ProcedureButton @click="clickConfirm" class="confirm">確認</ProcedureButton>
+          <ProcedureButton @click="$emit('close')" class="cancel"
+            >取消</ProcedureButton
+          >
+          <ProcedureButton @click="clickConfirm" class="confirm"
+            >確認</ProcedureButton
+          >
+          <ProcedureButton
+            @click="$emit('deleteItem', this.day.date), $emit('close')"
+            class="delete"
+            >刪除</ProcedureButton
+          >
         </div>
       </div>
     </div>
@@ -76,8 +89,10 @@ export default {
       required: true,
     },
   },
+  emits: ["close", "deleteItem"],
   created() {
-    let { userID, companyID, onDuty, offDuty, isDayOff, leaveType } = this.currentDayData;
+    let { userID, companyID, onDuty, offDuty, isDayOff, leaveType } =
+      this.currentDayData;
     this.monthlyData = {
       ...this.monthlyData,
       userID: userID,
@@ -116,14 +131,23 @@ export default {
         offDuty: this.monthlyData.offDuty.format("HH:mm"),
       };
       if (this.isLogIn) {
-        await this.$store.dispatch("recordingData/postMonthlyData", currentModalData);
-        await this.$store.dispatch("recordingData/getMonthlyData", currentPageComapnyID);
+        await this.$store.dispatch(
+          "recordingData/postMonthlyData",
+          currentModalData
+        );
+        await this.$store.dispatch(
+          "recordingData/getMonthlyData",
+          currentPageComapnyID
+        );
         return;
       } else {
         //新增資料
         //存localStoreage
         this.$store.commit("recordingData/addRecordData", currentModalData);
-        this.$store.dispatch("recordingData/saveLocalStorageMonthlyData", this.currentCompanyID);
+        this.$store.dispatch(
+          "recordingData/saveLocalStorageMonthlyData",
+          this.currentCompanyID
+        );
       }
 
       this.$emit("close");
@@ -135,12 +159,9 @@ export default {
       }
       return hours;
     },
-    // getDisabledMinutes() {
-    //   let minutes = [];
-    //   for (let minute = 0; minute < this.monthlyData.onDuty.minute(); minute++) {
-    //     minutes.push(minute);
-    //   }
-    //   return minutes;
+    // clickDelete() {
+    //   console.log(this.day.date);
+    //   this.$emit("clickDelete", this.day.date);
     // },
   },
   computed: {
@@ -293,6 +314,13 @@ export default {
 
     .confirm:hover {
       background-color: color.$brown;
+    }
+    .delete {
+      background-color: color.$delete;
+      width: 100px;
+      &:hover {
+        background-color: #fe8686;
+      }
     }
   }
 }
