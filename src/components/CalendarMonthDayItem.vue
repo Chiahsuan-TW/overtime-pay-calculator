@@ -5,16 +5,34 @@
     :class="{
       'calendar-day--not-current': !isCurrentMonth,
       'calendar-day--today': isToday,
-      isExistingData: this.monthlyRecordData.find((item) => item.date === this.day.date) ? true : false,
+      isExistingData: this.monthlyRecordData.find(
+        (item) => item.date === this.day.date
+      )
+        ? true
+        : false,
     }"
   >
     <span>{{ label }}</span>
     <!-- <p class="overtime-indicator">加班2hr</p> -->
   </td>
-  <!-- <Teleport to="body">
-    <CalendarModal v-if="isModalOpen" @close="toggleModal" />
-  </Teleport> -->
-  <CalendarModal v-if="isModalOpen" @close="toggleModal" :day="day" :currentDayData="currentDayData" />
+  <!-- <CalendarModal
+    v-if="isModalOpen"
+    @close="toggleModal"
+    :day="day"
+    :currentDayData="currentDayData"
+    @deleteItem="
+      (date) => {
+        this.$emit('deleteItem', date);
+      }
+    "
+  /> -->
+  <CalendarModal
+    v-if="isModalOpen"
+    @close="toggleModal"
+    :day="day"
+    :currentDayData="currentDayData"
+    @deleteItem="this.$emit('deleteItem', $event)"
+  />
 </template>
 
 <script>
@@ -48,6 +66,7 @@ export default {
       type: Object,
     },
   },
+  emits: ["deleteItem"],
   data() {
     return {
       isModalOpen: false,
@@ -60,6 +79,9 @@ export default {
         this.isModalOpen = !this.isModalOpen;
       }
     },
+    // test(date) {
+    //   this.$emit("deleteItem", date);
+    // },
   },
   computed: {
     label() {
