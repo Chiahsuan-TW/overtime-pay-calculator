@@ -18,7 +18,6 @@
 ![](https://i.imgur.com/QbizRSk.png)
 
 ### 基本資料
-  
 ![](https://i.imgur.com/T7axCy1.png)
 
 * 使用者可以記錄四家公司相關資訊，也可以薪資計算
