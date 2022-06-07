@@ -46,4 +46,11 @@
 
 下拉式選單選擇年份，會出現相對應的計算結果和內容
 
+### 輸出格式
+![](https://i.imgur.com/ZIKtG0C.png)
+
+![](https://i.imgur.com/mXyMj4B.png)
+- [x] pdf
+- [ ] e-mail (還在開發中)
+
 
