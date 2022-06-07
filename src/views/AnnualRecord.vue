@@ -51,8 +51,7 @@
         >上一步</ProcedureButton
       >
 
-      <!-- <ProcedureButton class="complete-button">完成</ProcedureButton> -->
-      <CustomPopover></CustomPopover>
+      <CustomPopover @openPDF="openPDF"></CustomPopover>
     </div>
   </div>
 </template>
@@ -63,6 +62,7 @@ import MonthlyList from "../components/MonthlyList.vue";
 import AnnualList from "../components/AnnualList.vue";
 import { DownOutlined } from "@ant-design/icons-vue";
 import CustomPopover from "@/components/CustomPopover.vue";
+
 export default {
   name: "AnnualRecord",
   components: {
@@ -77,29 +77,7 @@ export default {
     return {
       currentStep: 3,
       selectedYear: "2022",
-      monthlyRecords: [
-        {
-          year: 2020,
-          month: "1月",
-          workingHours: 20,
-          overtimeHours: 2,
-          overtimePay: 2000,
-        },
-        {
-          year: 2020,
-          month: "2月",
-          workingHours: 20,
-          overtimeHours: 2,
-          overtimePay: 2000,
-        },
-        {
-          year: 2020,
-          month: "3月",
-          workingHours: 20,
-          overtimeHours: 2,
-          overtimePay: 2000,
-        },
-      ],
+      monthlyRecords: [],
       isClickYear: false,
     };
   },
@@ -110,6 +88,17 @@ export default {
     clickYear(e) {
       this.selectedYear = e.key;
       this.isClickYear = true;
+    },
+    openPDF() {
+      const newPage = window.open("", "", "width=1000,height=500");
+      const content = document.querySelectorAll(".modal-content");
+      const result = document.querySelector(".result").innerHTML;
+      content.forEach((item) => {
+        newPage.document.body.innerHTML += item.innerHTML;
+      });
+      newPage.document.body.innerHTML += `<hr></hr>${result}`;
+
+      newPage.print();
     },
   },
   computed: {

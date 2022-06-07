@@ -1,6 +1,6 @@
 <template>
   <a-button type="primary" @click="showModal" class="complete-button"
-    >輸入</a-button
+    >輸出</a-button
   >
   <a-modal
     v-model:visible="isVisible"
@@ -8,17 +8,17 @@
     @ok="handleOk"
     :confirmLoading="isConfirmLoading"
   >
-    <p>PDF</p>
+    <p @click="clickPDF">PDF</p>
     <p>E-mail</p>
   </a-modal>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
-export default defineComponent({
-  setup() {
+import { ref } from "vue";
+export default {
+  emits: ["openPDF"],
+  setup(_props, { emit }) {
     const isVisible = ref(false);
     const isConfirmLoading = ref(false);
-
     const showModal = () => {
       isVisible.value = true;
     };
@@ -28,7 +28,13 @@ export default defineComponent({
       setTimeout(() => {
         isVisible.value = false;
         isConfirmLoading.value = false;
-      }, "1000");
+      }, 1000);
+    };
+    const clickPDF = () => {
+      isVisible.value = false;
+      setTimeout(() => {
+        emit("openPDF");
+      }, 1000);
     };
 
     return {
@@ -36,9 +42,10 @@ export default defineComponent({
       isVisible,
       showModal,
       handleOk,
+      clickPDF,
     };
   },
-});
+};
 </script>
 <style scoped lang="scss">
 .complete-button {
@@ -54,5 +61,4 @@ export default defineComponent({
     background-color: color.$brown;
   }
 }
-
 </style>
