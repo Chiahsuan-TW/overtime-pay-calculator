@@ -22,15 +22,23 @@
       <!-- <p>{{ editingCompanies }}</p> -->
       <div class="modal-content-item companyName">
         <span>公司名稱:</span>
-        <input type="text" :value="editingCompanies[currentIndex].companyName" @input="updateCompanyName" />
+        <input
+          type="text"
+          :value="editingCompanies[currentIndex].companyName"
+          @input="updateCompanyName"
+        />
       </div>
       <div class="modal-content-item">
-        <Dropdown :optionList="workTypeList" v-model:TypeValue="editingCompanies[currentIndex].workType"
+        <Dropdown
+          :optionList="workTypeList"
+          v-model:TypeValue="editingCompanies[currentIndex].workType"
           >工作類型</Dropdown
         >
       </div>
       <div class="modal-content-item">
-        <Dropdown :optionList="workPatternList" v-model:TypeValue="editingCompanies[currentIndex].workPattern"
+        <Dropdown
+          :optionList="workPatternList"
+          v-model:TypeValue="editingCompanies[currentIndex].workPattern"
           >工作型態</Dropdown
         >
       </div>
@@ -215,18 +223,18 @@ h3 {
   box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);
   border-radius: 16px;
   margin: 40px auto 0;
-  padding: 40px 0;
+  // padding: 40px 0;
+  padding-bottom: 40px;
   overflow-x: auto;
 
   @include breakpoint.tablet {
     width: 80%;
     max-width: 1094px;
     max-height: 600px;
-
     overflow-y: scroll;
     margin: 40px auto 0;
     box-shadow: 3px 6px 14px rgba(255, 153, 0, 0.11);
-    border-radius: 16px;
+    // border-radius: 16px;
   }
 
   &-content {
@@ -241,21 +249,28 @@ h3 {
   align-items: center;
   justify-content: center;
   margin-bottom: 50px;
+  // border-bottom: 1px solid rgb(159, 118, 16);
   & > a {
+    // border: 1px solid rgb(159, 118, 16);
+    // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    flex: 1;
     vertical-align: middle;
     text-align: center;
-    color: color.$gray;
-    border-radius: 10px 10px 0px 0px;
+    color: #fff;
+    // border-radius: 10px 10px 0px 0px;
     font-weight: 600;
     width: 145px;
     line-height: 45px;
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
+    background: color.$primary-light;
   }
   .currentTab {
-    color: #fff;
-    background: color.$primary-light;
+    color: color.$gray;
+    background: inherit;
+    box-shadow: -3px -3px 3px 0px gray, 3px -3px 3px 0px gray;
+    z-index: 1;
   }
 }
 

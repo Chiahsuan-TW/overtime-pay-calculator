@@ -1,11 +1,5 @@
 <template>
   <h3>出勤明細</h3>
-  <!-- <pre>workingHours{{ workingHours }}</pre> -->
-  <!-- <pre>overtimeHours{{ overtimeHours }}</pre> -->
-  <!-- <pre>overtimePays{{ overtimePays }}</pre> -->
-  <!-- <pre>formattedData{{ formattedData }}</pre> -->
-  <!-- <pre>{{ showData }}</pre> -->
-  <!-- <pre>{{ calculateAnnualOfYear }}</pre> -->
   <div class="modal">
     <Stepper :currentStep="currentStep" />
     <div class="modal-content custom-dropdown">
@@ -14,12 +8,16 @@
           <div class="wrap_img">
             <img src="../assets/images/calendar.png" alt="calendar icon" />
           </div>
-          <span class="display_text">{{ selectedYear ? selectedYear : "選擇年份" }}</span>
+          <span class="display_text">{{
+            selectedYear ? selectedYear : "選擇年份"
+          }}</span>
           <DownOutlined />
         </a>
         <template #overlay>
           <a-menu @click="clickYear">
-            <a-menu-item v-for="year in years" :key="year">{{ year }}</a-menu-item>
+            <a-menu-item v-for="year in years" :key="year">{{
+              year
+            }}</a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -43,11 +41,18 @@
     <div class="divider"></div>
 
     <div class="result">
-      <AnnualList :year="selectedYear" :calculateAnnualOfYear="calculateAnnualOfYear" />
+      <AnnualList
+        :year="selectedYear"
+        :calculateAnnualOfYear="calculateAnnualOfYear"
+      />
     </div>
     <div class="bottom">
-      <ProcedureButton class="previous-button" @click="previousButton">上一步</ProcedureButton>
-      <ProcedureButton class="complete-button">完成</ProcedureButton>
+      <ProcedureButton class="previous-button" @click="previousButton"
+        >上一步</ProcedureButton
+      >
+
+      <!-- <ProcedureButton class="complete-button">完成</ProcedureButton> -->
+      <CustomPopover></CustomPopover>
     </div>
   </div>
 </template>
@@ -57,6 +62,7 @@ import ProcedureButton from "@/components/ProcedureButton.vue";
 import MonthlyList from "../components/MonthlyList.vue";
 import AnnualList from "../components/AnnualList.vue";
 import { DownOutlined } from "@ant-design/icons-vue";
+import CustomPopover from "@/components/CustomPopover.vue";
 export default {
   name: "AnnualRecord",
   components: {
@@ -65,6 +71,7 @@ export default {
     MonthlyList,
     AnnualList,
     DownOutlined,
+    CustomPopover,
   },
   data() {
     return {
@@ -131,7 +138,9 @@ export default {
     },
     years() {
       return this.formattedData.reduce((previousData, currentData) => {
-        const findResult = previousData.findIndex((item) => item === currentData.year);
+        const findResult = previousData.findIndex(
+          (item) => item === currentData.year
+        );
         if (findResult === -1) {
           previousData.push(currentData.year);
         }
@@ -139,13 +148,18 @@ export default {
       }, []);
     },
     showData() {
-      return this.formattedData.filter((item) => item.year === this.selectedYear);
+      return this.formattedData.filter(
+        (item) => item.year === this.selectedYear
+      );
     },
     calculateAnnualOfYear() {
       return this.showData.reduce((previousData, currentData) => {
-        previousData["workingHour"] = (previousData["workingHour"] ?? 0) + currentData.workingHour;
-        previousData["overtimeHour"] = (previousData["overtimeHour"] ?? 0) + currentData.overtimeHour;
-        previousData["overtimePay"] = (previousData["overtimePay"] ?? 0) + currentData.overtimePay;
+        previousData["workingHour"] =
+          (previousData["workingHour"] ?? 0) + currentData.workingHour;
+        previousData["overtimeHour"] =
+          (previousData["overtimeHour"] ?? 0) + currentData.overtimeHour;
+        previousData["overtimePay"] =
+          (previousData["overtimePay"] ?? 0) + currentData.overtimePay;
         return previousData;
       }, {});
     },
@@ -153,6 +167,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+* {
+  // outline: 1px solid red;
+}
 h3 {
   @extend %page-title;
   margin: 0 auto;

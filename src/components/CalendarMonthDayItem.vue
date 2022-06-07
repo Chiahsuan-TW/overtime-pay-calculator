@@ -13,19 +13,7 @@
     }"
   >
     <span>{{ label }}</span>
-    <!-- <p class="overtime-indicator">加班2hr</p> -->
   </td>
-  <!-- <CalendarModal
-    v-if="isModalOpen"
-    @close="toggleModal"
-    :day="day"
-    :currentDayData="currentDayData"
-    @deleteItem="
-      (date) => {
-        this.$emit('deleteItem', date);
-      }
-    "
-  /> -->
   <CalendarModal
     v-if="isModalOpen"
     @close="toggleModal"
@@ -70,7 +58,6 @@ export default {
   data() {
     return {
       isModalOpen: false,
-      // isExistingData: this.monthlyRecordData.find((item) => item.date === this.day.date) ? true : false,
     };
   },
   methods: {
@@ -79,9 +66,6 @@ export default {
         this.isModalOpen = !this.isModalOpen;
       }
     },
-    // test(date) {
-    //   this.$emit("deleteItem", date);
-    // },
   },
   computed: {
     label() {
@@ -138,5 +122,7 @@ export default {
 }
 .isExistingData {
   background: #d8e7fd;
+  // background: color.$primary;
+  // background: #ffde05;
 }
 </style>

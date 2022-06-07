@@ -159,10 +159,6 @@ export default {
       }
       return hours;
     },
-    // clickDelete() {
-    //   console.log(this.day.date);
-    //   this.$emit("clickDelete", this.day.date);
-    // },
   },
   computed: {
     isLogIn() {

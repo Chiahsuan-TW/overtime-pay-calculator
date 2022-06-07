@@ -1,0 +1,38 @@
+.ant-modal-content {
+  background: color.$pale-yellow;
+  text-align: center;
+  p {
+    padding: 10px;
+    color: orange;
+    display: block;
+    font-weight: 900;
+    line-height: 30px;
+    border-radius: 10px ;
+
+    &:hover {
+      color: rgb(99, 89, 89);
+      background: orange;
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+}
+.ant-modal-header{
+  text-align: center;
+  background: color.$pale-yellow;
+  border-bottom: 3px solid orange;
+}
+.ant-btn-primary{
+  background-color: orange;
+  border: none;
+  cursor: pointer;
+  &:hover{
+    background-color: #fff;
+    color: orange;
+    border: 1px solid orange;
+  
+  }
+}
+
+
+

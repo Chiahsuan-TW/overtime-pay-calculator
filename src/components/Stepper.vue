@@ -59,7 +59,7 @@ export default {
 .stepper::after {
   display: block;
   content: "";
-  width: 100%;
+  width: 50%;
   border-bottom: 2px dashed color.$primary;
   position: absolute;
   top: 50%;
