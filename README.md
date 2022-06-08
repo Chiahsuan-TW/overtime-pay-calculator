@@ -48,8 +48,8 @@
 
 ### 輸出格式
 ![](https://i.imgur.com/ZIKtG0C.png)
+![](https://i.imgur.com/1GieutG.png)
 
-![](https://i.imgur.com/mXyMj4B.png)
 - [x] pdf
 - [ ] e-mail (還在開發中)
 
