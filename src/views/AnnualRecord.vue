@@ -97,7 +97,8 @@ export default {
         newPage.document.body.innerHTML += item.innerHTML;
       });
       newPage.document.body.innerHTML += `<hr></hr>${result}`;
-
+      newPage.document.body.style =
+        "width:500px;margin:0 auto;text-align:center";
       newPage.print();
     },
   },

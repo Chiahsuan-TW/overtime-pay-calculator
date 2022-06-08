@@ -2,16 +2,17 @@
   <router-view />
 </template>
 <script>
+// import { onBeforeMount } from "vue";
 export default {
-  mounted() {
-    // window.addEventListener("beforeunload", () => {
-    //   localStorage.removeItem("userInfo");
-    //   localStorage.removeItem("company1");
-    //   localStorage.removeItem("company2");
-    //   localStorage.removeItem("company3");
-    //   localStorage.removeItem("company4");
-    // });
-  },
+  // setup() {
+  //   onBeforeMount(() => {
+  //     localStorage.removeItem("userInfo");
+  //     localStorage.removeItem("company1");
+  //     localStorage.removeItem("company2");
+  //     localStorage.removeItem("company3");
+  //     localStorage.removeItem("company4");
+  //   });
+  // },
 };
 </script>
 <style lang="scss">
